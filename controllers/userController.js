@@ -1,5 +1,20 @@
 const User = require("../models/User")
 
+exports.doesUsernameExist = function (req, res) {
+  User.findByUsername(req.body.username)
+    .then(function () {
+      res.json(true)
+    })
+    .catch(function () {
+      res.json(false)
+    })
+}
+
+exports.doesEmailExist = async function (req, res) {
+  let emailBool = await User.doesEmailExist(req.body.email)
+  res.json(emailBool)
+}
+
 exports.login = function (req, res) {
   let user = new User(req.body)
   user

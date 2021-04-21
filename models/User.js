@@ -129,4 +129,56 @@ User.prototype.register = function () {
   })
 }
 
+//required for a couple of actions including frontend-js registrationForm validation
+User.findByUsername = function (username) {
+  return new Promise(function (resolve, reject) {
+    if (typeof username != "string") {
+      reject()
+      //prevent further execution of the function
+      return
+    }
+
+    usersCollection
+      .findOne({ username: username })
+      .then(function (userDoc) {
+        if (userDoc) {
+          // was userDoc = new User(userDoc, true)
+          // removed ture as param since currently not utilizing avatar
+          userDoc = new User(userDoc)
+          // customizing userDoc to only gte what we need and not show hashed password
+          userDoc = {
+            // have _id so we can later look up posts by this user
+            _id: userDoc.data._id,
+            username: userDoc.data.username
+            // avatar: userDoc.avatar
+          }
+          resolve(userDoc)
+        } else {
+          reject()
+        }
+      })
+      .catch(function () {
+        reject()
+      })
+  })
+}
+
+User.doesEmailExist = function (email) {
+  return new Promise(async function (resolve, reject) {
+    if (typeof email != "string") {
+      resolve(false)
+      //stop any further execution of function if not a string
+      return
+    }
+
+    //check database
+    let user = await usersCollection.findOne({ email: email })
+    if (user) {
+      resolve(true)
+    } else {
+      resolve(false)
+    }
+  })
+}
+
 module.exports = User

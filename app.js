@@ -18,6 +18,8 @@ let sessionOptions = session({
   cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true }
 })
 
+//app.use() tells express to run that function for every request
+
 // tell express to actualy use sessions/sessionOptions
 app.use(sessionOptions)
 
