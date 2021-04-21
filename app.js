@@ -3,7 +3,11 @@ const express = require("express")
 const session = require("express-session")
 // needed to store session data in db instead of the default (storage in server memory)
 const MongoStore = require("connect-mongo")(session)
+// needed to have flash messages
 const flash = require("connect-flash")
+//needed to protect against csrf attacks
+const csrf = require("csurf")
+//needed for express
 const app = express()
 
 // set up configuration object for sessions
@@ -45,7 +49,28 @@ app.set("views", "views")
 // let express know which templating engine we are using
 app.set("view engine", "ejs")
 
+// tell express to make sure any request has a valid matching csrf token
+app.use(csrf())
+
+// make the csrf token available within templates
+app.use(function (req, res, next) {
+  res.locals.csrfToken = req.csrfToken()
+  next()
+})
+
 // tell express to use the router file we set up
 app.use("/", router)
+
+// csrf message
+app.use(function (err, req, res, next) {
+  if (err) {
+    if (err.code == "EBADCSRFTOKEN") {
+      req.flash("errors", "Cross Site Request Forgery Detected.")
+      req.session.save(() => res.redirect("/"))
+    } else {
+      res.render("404")
+    }
+  }
+})
 
 module.exports = app
