@@ -30,6 +30,13 @@ app.use(sessionOptions)
 // tell express to use the flash package
 app.use(flash())
 
+// custom middleware
+// this will run for all of our routes before functions listed in router
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user
+  next()
+})
+
 // bring in router
 const router = require("./router")
 

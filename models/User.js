@@ -7,6 +7,12 @@ const validator = require("validator")
 let User = function (data) {
   this.data = data
   this.errors = []
+/*   if (getAvatar == undefined) {
+    getAvatar = false
+  }
+  if (getAvatar) {
+    this.getAvatar()
+  } */
 }
 
 User.prototype.cleanUp = function () {
@@ -93,6 +99,8 @@ User.prototype.login = function () {
       .findOne({ username: this.data.username })
       .then(attemptedUser => {
         if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
+          this.data = attemptedUser
+         /*  this.getAvatar() */
           resolve("Congrats!")
         } else {
           reject("invalid username/password")
@@ -122,12 +130,18 @@ User.prototype.register = function () {
 
       // insert into db
       await usersCollection.insertOne(this.data)
+      /* this.getAvatar() */
       resolve()
     } else {
       reject(this.errors)
     }
   })
 }
+
+//using gravatar as link to profile
+/* User.prototype.getAvatar = function () {
+  this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
+} */
 
 //required for a couple of actions including frontend-js registrationForm validation
 User.findByUsername = function (username) {
@@ -142,15 +156,14 @@ User.findByUsername = function (username) {
       .findOne({ username: username })
       .then(function (userDoc) {
         if (userDoc) {
-          // was userDoc = new User(userDoc, true)
-          // removed ture as param since currently not utilizing avatar
+          //pass a param of true in addition to userdoc if using gravatar
           userDoc = new User(userDoc)
-          // customizing userDoc to only gte what we need and not show hashed password
+          // customizing userDoc to only get what we need and not show hashed password
           userDoc = {
             // have _id so we can later look up posts by this user
             _id: userDoc.data._id,
-            username: userDoc.data.username
-            // avatar: userDoc.avatar
+            username: userDoc.data.username,
+            /* avatar: userDoc.avatar */
           }
           resolve(userDoc)
         } else {

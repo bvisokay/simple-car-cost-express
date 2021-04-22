@@ -1,5 +1,16 @@
 const User = require("../models/User")
 
+exports.mustBeLoggedIn = function (req, res, next) {
+  if (req.session.user) {
+    next()
+  } else {
+    req.flash("errors", "You must be logged in to perform that action.")
+    req.session.save(function () {
+      res.redirect("/")
+    })
+  }
+}
+
 exports.doesUsernameExist = function (req, res) {
   User.findByUsername(req.body.username)
     .then(function () {
@@ -24,7 +35,8 @@ exports.login = function (req, res) {
       // (.user property is an object that could be set to anything)
       // stores session data in server memory by default
       // set session data in db using package connect-mongo (we do this in app.js)
-      req.session.user = { username: user.data.username }
+      // removed  avatar: user.avatar,
+      req.session.user = { username: user.data.username, _id: user.data._id  }
       // tell session to manually save using save method with callback function
       // remember a db process can take a bit to complete action
       req.session.save(function () {
@@ -62,7 +74,8 @@ exports.register = function (req, res) {
     .register()
     .then(() => {
       //redirect to homepage but update their session data so actually logged in
-      req.session.user = { username: user.data.username }
+      //removed user.avatar
+      req.session.user = { username: user.data.username, _id: user.data._id }
       // since the above action may take a while to save in db
       // manually tell session to save
       req.session.save(function () {
@@ -89,7 +102,7 @@ exports.home = function (req, res) {
   // show them custom data else show them the guest template
   if (req.session.user) {
     // also pass data into that template (username: could be called anything)
-    res.render("home-dashboard", { username: req.session.user.username })
+    res.render("home-dashboard")
   } else {
     // also pass data from errors and regErrors arrays into the home-guest template
     res.render("home-guest", { errors: req.flash("errors"), regErrors: req.flash("regErrors") })

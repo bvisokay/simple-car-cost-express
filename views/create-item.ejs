@@ -1,0 +1,32 @@
+<%- include('includes/header') %>
+
+<div class="container py-md-5 container--narrow">
+  <form action="/create-item" method="POST">
+    <div class="form-group">
+      <label for="post-title" class="text-muted mb-1"><small>Description</small></label>
+      <input required name="description" id="item-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="post-cost" class="text-muted mb-1"><small>Cost</small></label>
+      <input required name="cost" id="item-cost" class="form-control form-control-lg form-control-title" type="number" min="1" placeholder="" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="post-miles" class="text-muted mb-1"><small>Miles</small></label>
+      <input required name="miles" id="item-miles" class="form-control form-control-lg form-control-title" type="number" min="1" placeholder="" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="post-link" class="text-muted mb-1"><small>Link</small></label>
+      <input name="link" id="item-link" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+    </div>
+
+    <!-- protects against csrf attack -->
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
+
+    <button class="btn btn-primary">Save Car</button>
+  </form>
+</div>
+
+<%- include('includes/footer') %>
