@@ -1,3 +1,4 @@
+
 const Item = require("../models/Item")
 
 exports.viewCreateScreen = function (req, res) {
@@ -10,11 +11,15 @@ exports.create = function (req, res) {
   // this method will be set up to return a promise
   item
     .create()
-    .then(function () {
-      res.send("New car item created.")
+    // passing newId to navigate to new url with post id after creating post
+    // currently not using since I am redirecting to profile/username
+    .then(function (newId) {
+      req.flash("success", "New item sucessfully added")
+      req.session.save(() => res.redirect(`/profile/${req.session.user.username}`))
     })
     .catch(function (errors) {
-      res.send(errors)
+      errors.forEach(error => res.flash("errors", errors))
+      req.session.save(() => res.redirect("create-post"))
     })
 }
 
@@ -34,7 +39,13 @@ exports.viewSingle = async function(req, res) {
 exports.viewEditScreen = async function(req, res) {
   try {
     let item = await Item.findSingleById(req.params.id)
-  res.render("edit-item", {item: item})
+    if(item.authorId == req.visitorId) {
+      res.render("edit-item", {item: item})
+    } else {
+      req.flash("errors", "You do not have permission to perform that action.")
+      req.session.save(() => res.redirect("/"))
+    }
+
   } catch {
     res.render("404")
   }

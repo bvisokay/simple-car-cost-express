@@ -1,33 +1,12 @@
 <%- include('includes/header') %>
 
-<div class="container py-md-5 container--narrow">
+<div class="container py-md-5 container--narrow mt-5 mb-5">
   <%- include("includes/flash") %>
   <div class="text-center">
-    <h2>Hello <strong><%= user.username %></strong>, your list is empty.</h2>
-    <p class="lead text-muted">Your list displays any vehicles and their important info. Get Started by completing the form below</p>
+    <h2>Hello <strong><%= user.username %></strong>, this is your home dashboard</h2>
 </div>
-<div class="container py-md-5 container--narrow">
-  <h2><%=user.username %>'s hard-coded car items</h2>
 
-  <div class="profile-nav nav nav-tabs pt-2 mb-4">
-    <a href="#" class="profile-nav-link nav-item nav-link active">Posts: 3</a>
-    <a href="#" class="profile-nav-link nav-item nav-link ">Share?</a>
-    <a href="#" class="profile-nav-link nav-item nav-link ">Account Settings</a>
-  </div>
 
-  <div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">
-      
-      <strong>Example Post #1</strong> on 0/13/2019
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-      
-      <strong>Example Post #2</strong> on 0/13/2019
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-      <strong>Example Post #3</strong> on 0/13/2019
-    </a>
-  </div>
-</div>
+  
 
 <%- include('includes/footer') %>

@@ -42,7 +42,7 @@ exports.login = function (req, res) {
       // remember a db process can take a bit to complete action
       req.session.save(function () {
         // send back result
-        res.redirect("/")
+        res.redirect(`/profile/${req.session.user.username}`)
       })
     })
     .catch(function (e) {
@@ -81,7 +81,7 @@ exports.register = function (req, res) {
       // manually tell session to save
       req.session.save(function () {
         // redirect back to home page url
-        res.redirect("/")
+        res.redirect(`/profile/${req.session.user.username}`)
       })
     })
     .catch(regErrors => {
@@ -103,7 +103,7 @@ exports.home = function (req, res) {
   // show them custom data else show them the guest template
   if (req.session.user) {
     // also pass data into that template (username: could be called anything)
-    res.render("home-dashboard")
+    res.redirect(`/profile/${req.session.user.username}`)
   } else {
     // also pass data from errors and regErrors arrays into the home-guest template
     res.render("home-guest", {regErrors: req.flash("regErrors") })

@@ -71,8 +71,10 @@ Item.prototype.create = function () {
       // Save Car Item in DB
       itemsCollection
         .insertOne(this.data)
-        .then(() => {
-          resolve()
+        // passing info and resolving with info.ops[0]._id
+        // needed if you want to navigate to url with post id right after creating
+        .then((info) => {
+          resolve(info.ops[0]._id)
         })
         .catch(() => {
           this.errors.push("Please try again later")
