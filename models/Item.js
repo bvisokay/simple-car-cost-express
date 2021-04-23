@@ -87,36 +87,59 @@ Item.prototype.create = function () {
   })
 }
 
-Item.findSingleById = function(id) {
+
+//function created to avoid duplicate code in both findSingleById and findAuthorById
+// Down below there is a $ in quotes
+// ...mongodb knows you are talking about actual field not a literal string
+Item.reusablePostQuery = function(uniqueOperations, visitorId) {
+  return new Promise(async function(resolve, reject) {
+
+    let aggOperations = uniqueOperations.concat([
+      {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
+      {$project: {
+        description: 1,
+        cost: 1,
+        miles: 1,
+        remaining_months: 1,
+        cost_per_remaining_month: 1,
+        link: 1,
+        createdDate: 1,
+        authorId: "$author",
+        author: {$arrayElemAt: ["$authorDocument", 0]}
+      }}
+    ])
+
+  // .toArray is needed to put in format we can use and return a promise
+  let items = await itemsCollection.aggregate(aggOperations).toArray()
+
+  //clean up author property in each item object
+  items = items.map(function(item) {
+
+    // mongo method of equals returns value of true or false
+    item.isVisitorOwner = item.authorId.equals(visitorId)
+
+    item.author = {
+      username: item.author.username
+      /* avatar: new User(post.author, true) */
+    }
+    return item
+  })
+  resolve(items)
+  })
+}
+
+// leverages reusablePostQuery function above to avoid duplicate code
+// second param of visitorId is to receive incoming visitorId
+Item.findSingleById = function(id, visitorId) {
       return new Promise(async function(resolve, reject) {
       if (typeof(id) != "string" || !ObjectId.isValid(id)) {
         reject()
         return
       }
-      // .toArray is needed to put in format we can use and return a promise
-      let items = await itemsCollection.aggregate([
-        {$match: {_id: new ObjectId(id)}},
-        {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
-        {$project: {
-          description: 1,
-          cost: 1,
-          miles: 1,
-          remaining_months: 1,
-          cost_per_remaining_month: 1,
-          link: 1,
-          createdDate: 1,
-          author: {$arrayElemAt: ["$authorDocument", 0]}
-        }}
-      ]).toArray()
-
-      //clean up author preoporty in each item object
-      items = items.map(function(item) {
-        item.author = {
-          username: item.author.username
-          /* avatar: new User(post.author, true) */
-        }
-        return item
-      })
+      
+      let items = await Item.reusablePostQuery([
+       {$match: {_id: new ObjectId(id)}}
+      ], visitorId)
 
       if (items.length) {
         console.log(items[0])
@@ -127,5 +150,12 @@ Item.findSingleById = function(id) {
       }
       })
  }
+
+Item.findByAuthorId = function(authorId) {
+  return Item.reusablePostQuery([
+    {$match: {author: authorId}},
+    {$sort: {createdDate: -1}}
+  ])
+}
 
 module.exports = Item

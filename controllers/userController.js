@@ -1,4 +1,5 @@
 const User = require("../models/User")
+const Item = require("../models/Item")
 
 exports.mustBeLoggedIn = function (req, res, next) {
   if (req.session.user) {
@@ -120,8 +121,16 @@ exports.ifUserExists = function(req, res, next) {
 
 //needed if you want to show profile name on the profile screen
 exports.profilePostsScreen = function(req, res) {
-  res.render('profile', {
-    profileUsername: req.profileUser.username
-    // profileAvatar: req.profileUser.avatar
+  // ask our item model for items by a certain author id
+  Item.findByAuthorId(req.profileUser._id).then(function(items) {
+    res.render('profile', {
+      items: items,
+      profileUsername: req.profileUser.username
+      // profileAvatar: req.profileUser.avatar
+    })
+  }).catch(function() {
+    res.render("404")
   })
+
+  
 }

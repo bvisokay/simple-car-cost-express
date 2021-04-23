@@ -20,7 +20,10 @@ exports.create = function (req, res) {
 
 exports.viewSingle = async function(req, res) {
     try {
-      let item = await Item.findSingleById(req.params.id)
+      // leverage Item model and tell it to find an item
+      // first param of req.params.id tells it which post to lookup for current url
+      // second param req.visitorId helps determine if visitor is the author of the post
+      let item = await Item.findSingleById(req.params.id, req.visitorId)
        res.render('single-post-screen', {item: item})
       } catch {
        res.render("404")
