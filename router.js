@@ -16,5 +16,7 @@ router.get("/profile/:username", userController.ifUserExists, userController.pro
 router.get("/create-item", userController.mustBeLoggedIn, itemController.viewCreateScreen)
 router.post("/create-item", userController.mustBeLoggedIn, itemController.create)
 router.get("/item/:id", itemController.viewSingle)
+router.get("/item/:id/edit", itemController.viewEditScreen)
+router.post("/item/:id/edit", itemController.edit)
 
 module.exports = router

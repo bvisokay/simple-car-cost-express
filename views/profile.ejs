@@ -1,6 +1,7 @@
 <%- include('includes/header')  %>
 
 <div class="container py-md-5 container--narrow">
+  <%- include("includes/flash") %>
   <h2><%- profileUsername %>'s car items</h2>
 
   <div class="profile-nav nav nav-tabs pt-2 mb-4">
@@ -12,22 +13,24 @@
   <div class="list-group">
    <% items.forEach(function(item) { %>
     <div class="card mb-4">
-    <a class="list-group-item list-group-item-action" href="/item/<%= item._id %>">
-      <strong><%= item.description %></strong>
-    </a>
+    <span class="list-group-item list-group-item-primary">
+      <strong><%= item.description %></strong><span class="float-right">
+        <a href="/item/<%= item._id %>/edit" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+        <form class="delete-post-form d-inline" action="#" method="POST">
+          <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
+        </form>
+      </span>
+    </span>
    
     
     <span class="list-group-item list-group-flush">Cost: $<%= item.cost %></span>
     <span class="list-group-item list-group-flush">Miles: <%= item.miles %></span>
     <span class="list-group-item list-group-flush">Remaining Months: <%= item.remaining_months %></span>
-    <span class="list-group-item list-group-flush">Cost Per Remaining Months: $<%= item.cost_per_remaining_month %></span>
+    <span class="list-group-item list-group-flush">Cost Per Remaining Months: $<%= item.cost_per_remaining_month.toFixed(0) %></span>
     <span class="list-group-item list-group-flush">Link: <%= item.link %></span>
-    <span class="list-group-item list-group-flush pt-2 text-right">
-      <a href="#" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
-      <form class="delete-post-form d-inline" action="#" method="POST">
-        <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
-      </form>
-    </span>
+    
+      
+    
   </div>
    <% }) %>
   </div>

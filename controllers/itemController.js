@@ -29,3 +29,44 @@ exports.viewSingle = async function(req, res) {
        res.render("404")
     }
 }
+
+
+exports.viewEditScreen = async function(req, res) {
+  try {
+    let item = await Item.findSingleById(req.params.id)
+  res.render("edit-item", {item: item})
+  } catch {
+    res.render("404")
+  }
+}
+
+exports.edit = function(req, res) {
+  let item = new Item(req.body, req.visitorId, req.params.id)
+  item.update().then((status) => {
+    // the post was successfully updated in the database
+    // or the user did have permission, but there were validation errors
+    if(status == "success") {
+      //post was updated in the database
+      req.flash("success", "Car item was successfully updated.")
+      req.session.save(function() {
+        res.redirect(`/item/${req.params.id}/edit`)
+      })
+    } else {
+      // user had permission but validation errors
+      item.errors.forEach(function(error) {
+        req.flash("errors", error)
+      })
+        req.session.save(function() {
+          res.redirect(`/item/${req.params.id}/edit`)
+        })
+    }
+
+  }).catch(() => {
+    // if a post with requested id doesn't exit
+    // or if the current visitor is not the owner
+    req.flash("errors", "You do not have permission to perform that action")
+    req.session.save(function() {
+      res.redirect('/')
+    })
+  })
+}

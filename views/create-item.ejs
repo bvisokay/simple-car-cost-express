@@ -1,5 +1,7 @@
 <%- include('includes/header') %>
 
+<%- include("includes/flash") %>
+
 <div class="container py-md-5 container--narrow">
   <form action="/create-item" method="POST">
     <div class="form-group">
@@ -9,12 +11,12 @@
 
     <div class="form-group">
       <label for="post-cost" class="text-muted mb-1"><small>Cost</small></label>
-      <input required name="cost" id="item-cost" class="form-control form-control-lg form-control-title" type="number" min="1" placeholder="" autocomplete="off" />
+      <input required name="cost" id="item-cost" class="form-control form-control-lg form-control-title" type="number" min="0" placeholder="" autocomplete="off" />
     </div>
 
     <div class="form-group">
       <label for="post-miles" class="text-muted mb-1"><small>Miles</small></label>
-      <input required name="miles" id="item-miles" class="form-control form-control-lg form-control-title" type="number" min="1" placeholder="" autocomplete="off" />
+      <input required name="miles" id="item-miles" class="form-control form-control-lg form-control-title" type="number" min="0" placeholder="" autocomplete="off" />
     </div>
 
     <div class="form-group">

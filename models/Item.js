@@ -1,14 +1,15 @@
 const itemsCollection = require("../db").db().collection("items")
 const ObjectId = require('mongodb').ObjectId
-const User = require("./User")
+/* const User = require("./User") */
 
 // Receiving incoming form data from user req.body
 // Doing this with parameter called data and storing
 
-let Item = function (data, userid) {
+let Item = function (data, userid, requestedItemId) {
   this.data = data
   this.errors = []
   this.userid = userid
+  this.requestedItemId = requestedItemId
   this.useful_miles = 150000
   this.monthly_miles = 1250
 }
@@ -66,9 +67,6 @@ Item.prototype.create = function () {
     + " and cost_per_remaining_month is a " + typeof(this.data.cost_per_remaining_month))
     
     
-    
-    
-    
     if (!this.errors.length) {
       // Save Car Item in DB
       itemsCollection
@@ -86,6 +84,38 @@ Item.prototype.create = function () {
     }
   })
 }
+
+Item.prototype.update = function() {
+  return new Promise(async (resolve, reject) => {
+      try {
+          let item = await Item.findSingleById(this.requestedItemId, this.userid)
+          if (item.isVisitorOwner) {
+              // actually update db
+              let status = await this.actuallyUpdate()
+              resolve(status) 
+          } else {
+            
+              reject()
+          }
+      } catch {
+          reject()
+      }
+  })
+}
+
+Item.prototype.actuallyUpdate = function() {
+  return new Promise(async (resolve, reject) => {
+      this.cleanUp()
+      this.validate()
+      if (!this.errors.length) {
+          await itemsCollection.findOneAndUpdate({_id: new ObjectId(this.requestedItemId)}, {$set: {description: this.data.description, cost: this.data.cost, miles: this.data.miles,link: this.data.link }})
+          resolve("success")
+      } else {
+          resolve("failure")
+      }
+  })
+}
+
 
 
 //function created to avoid duplicate code in both findSingleById and findAuthorById
@@ -157,5 +187,7 @@ Item.findByAuthorId = function(authorId) {
     {$sort: {createdDate: -1}}
   ])
 }
+
+
 
 module.exports = Item

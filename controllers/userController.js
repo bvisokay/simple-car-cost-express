@@ -106,7 +106,7 @@ exports.home = function (req, res) {
     res.render("home-dashboard")
   } else {
     // also pass data from errors and regErrors arrays into the home-guest template
-    res.render("home-guest", { errors: req.flash("errors"), regErrors: req.flash("regErrors") })
+    res.render("home-guest", {regErrors: req.flash("regErrors") })
   }
 }
 
