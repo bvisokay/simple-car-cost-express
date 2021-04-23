@@ -1,5 +1,6 @@
 const itemsCollection = require("../db").db().collection("items")
 const ObjectId = require('mongodb').ObjectId
+const User = require("./User")
 
 // Receiving incoming form data from user req.body
 // Doing this with parameter called data and storing
@@ -88,13 +89,39 @@ Item.prototype.create = function () {
 
 Item.findSingleById = function(id) {
       return new Promise(async function(resolve, reject) {
-      if (typeof(id) != "string" || typeof(id) != "number" || !ObjectId.isValid(id)) {
+      if (typeof(id) != "string" || !ObjectId.isValid(id)) {
         reject()
         return
       }
-      let item = await itemsCollection.findOne({_id: new ObjectId(id)})
-      if (item) {
-      resolve(item)
+      // .toArray is needed to put in format we can use and return a promise
+      let items = await itemsCollection.aggregate([
+        {$match: {_id: new ObjectId(id)}},
+        {$lookup: {from: "users", localField: "author", foreignField: "_id", as: "authorDocument"}},
+        {$project: {
+          description: 1,
+          cost: 1,
+          miles: 1,
+          remaining_months: 1,
+          cost_per_remaining_month: 1,
+          link: 1,
+          createdDate: 1,
+          author: {$arrayElemAt: ["$authorDocument", 0]}
+        }}
+      ]).toArray()
+
+      //clean up author preoporty in each item object
+      items = items.map(function(item) {
+        item.author = {
+          username: item.author.username
+          /* avatar: new User(post.author, true) */
+        }
+        return item
+      })
+
+      if (items.length) {
+        console.log(items[0])
+      resolve(items[0])
+      //console.log(item)
       } else {
       reject()
       }

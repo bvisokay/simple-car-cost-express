@@ -4,6 +4,7 @@ const usersCollection = require("../db").db().collection("users")
 // helps validate user registration form
 const validator = require("validator")
 
+// if implementing gravatar then pass it to User as a second parameter
 let User = function (data) {
   this.data = data
   this.errors = []
@@ -191,6 +192,32 @@ User.doesEmailExist = function (email) {
     } else {
       resolve(false)
     }
+  })
+}
+
+User.findByUsername = function(username) {
+  return new Promise(function(resolve, reject) {
+    if(typeof(username) != "string"){
+      reject()
+      return
+    }
+
+    usersCollection.findOne({username: username}).then(function(userDoc) {
+      if(userDoc) {
+        //pass true a second argument to userDoc if you are using gravatar
+        userDoc = new User(userDoc)
+        userDoc = {
+          _id: userDoc.data._id,
+          username: userDoc.data.username
+          /* avatar: userDoc.avatar */
+        }
+        resolve(userDoc)
+      } else {
+        reject()
+      }
+    }).catch(function() {
+      reject()
+    })
   })
 }
 

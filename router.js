@@ -10,6 +10,7 @@ router.post("/login", userController.login)
 router.post("/logout", userController.logout)
 router.post("/doesUsernameExist", userController.doesUsernameExist)
 router.post("/doesEmailExist", userController.doesEmailExist)
+router.get("/:username", userController.ifUserExists, userController.profilePostsScreen)
 
 //item related routes
 router.get("/create-item", userController.mustBeLoggedIn, itemController.viewCreateScreen)

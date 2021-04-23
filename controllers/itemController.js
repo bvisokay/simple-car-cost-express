@@ -20,9 +20,9 @@ exports.create = function (req, res) {
 
 exports.viewSingle = async function(req, res) {
     try {
-      let item = Item.findSingleById(req.params.id)
-    res.render('single-post-screen', {item: item})
+      let item = await Item.findSingleById(req.params.id)
+       res.render('single-post-screen', {item: item})
       } catch {
-       res.send("404 will go here.")
+       res.render("404")
     }
 }
