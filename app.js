@@ -34,7 +34,7 @@ app.use(flash())
 // this will run for all of our routes before functions listed in router
 // this is also where you can pass data to routes???
 app.use(function (req, res, next) {
-  //make user session data available within view templates
+  //makes user session data available within view templates
   res.locals.user = req.session.user
   next()
 })
