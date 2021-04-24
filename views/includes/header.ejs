@@ -23,6 +23,11 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn btn-sm btn-secondary">Sign Out</button>
           </form>
+          <!--
+<a class="ml-2" style="color: orange;" href="/profile/<%= user.username %>/settings"  data-toggle="tooltip" data-placement="top" title="Settings"><i class="fas fa-user-cog"></i></a>
+          -->
+          
+          
         </div>
         <% } else { %>
         <form action="/login" method="POST" class="mb-0 pt-2 pt-md-0">

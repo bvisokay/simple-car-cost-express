@@ -3,26 +3,37 @@
 <div class="container py-md-5 container--narrow">
   <%- include("includes/flash") %>
   
-  <div class="text-center">
-    <h2>Hello <strong><%= profileUsername %></strong>, this is your list.</h2>
-  </div>
-
-  <div class="profile-nav nav nav-tabs pt-2 mb-4">
-    <a href="#" class="profile-nav-link nav-item nav-link active">Posts: 3</a>
-    <a href="#" class="profile-nav-link nav-item nav-link ">Share?</a>
-    <a href="#" class="profile-nav-link nav-item nav-link ">Account Settings</a>
+  <div class="mt-2 pt-2 mb-5 text-center">
+    <h2>Hello <strong><%= profileUsername.charAt(0).toUpperCase() + profileUsername.slice(1) %></strong>, you currently have <%= items.length %> items in your list.</h2>
   </div>
 
   <div class="list-group">
    <% items.forEach(function(item) { %>
     <div class="card mb-4">
     <span class="list-group-item list-group-item-primary">
-      <strong><%= item.description %></strong><span class="float-right">
+      <strong><%= item.description %></strong>
+
+      <!-- Conditional Link Icon Code Here -->
+      <% if (item.link == "No Link Provided") { %>
+        <span class="ml-2 small">(No Link Provided)</span>
+      <% } else { %>
+        <a href="<%= item.link %>" target="_blank" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Link To Listing"><i class="ml-2 fas fa-external-link-alt"></i></a>
+      <% } %><!-- Conditional Link Icon Code End -->
+
+      <!-- opens edit and delete span floated right here -->
+      <span class="float-right">
+        <!-- edit icon -->
         <a href="/item/<%= item._id %>/edit" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
-        <form class="delete-post-form d-inline" action="#" method="POST">
+
+        <!-- delete icon form button starts here -->
+        <form class="delete-post-form d-inline" action="/item/<%= item._id %>/delete" method="POST">
+          <!-- protects against csrf attack -->
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
+          <!-- Actual button -->
           <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
-        </form>
-      </span>
+        </form><!-- form button ends here -->
+      </span><!-- closes edit and delete span floated right here -->
+
     </span>
    
     
@@ -30,7 +41,6 @@
     <span class="list-group-item list-group-flush">Miles: <%= item.miles %></span>
     <span class="list-group-item list-group-flush">Remaining Months: <%= item.remaining_months %></span>
     <span class="list-group-item list-group-flush">Cost Per Remaining Months: $<%= item.cost_per_remaining_month.toFixed(0) %></span>
-    <span class="list-group-item list-group-flush">Link: <%= item.link %></span>
     
       
     

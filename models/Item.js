@@ -16,7 +16,7 @@ let Item = function (data, userid, requestedItemId) {
 
 Item.prototype.cleanUp = function () {
   // checkout what is in the data
-  console.log(this.data)
+  // console.log(this.data)
   // the values must be strings
   if (typeof this.data.description != "string") {
     this.data.description = ""}
@@ -174,7 +174,7 @@ Item.findSingleById = function(id, visitorId) {
       ], visitorId)
 
       if (items.length) {
-        console.log(items[0])
+        // console.log(items[0])
       resolve(items[0])
       //console.log(item)
       } else {
@@ -189,6 +189,23 @@ Item.findByAuthorId = function(authorId) {
     {$sort: {createdDate: -1}}
   ])
 }
+
+Item.delete = function(itemIdToDelete, currentUserId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let item = await Item.findSingleById(itemIdToDelete, currentUserId)
+      if (item.isVisitorOwner) {
+        await itemsCollection.deleteOne({_id: new ObjectId(itemIdToDelete)})
+        resolve()
+      } else {
+        reject()
+      }
+    } catch {
+      reject()
+    }
+  })
+}
+
 
 
 

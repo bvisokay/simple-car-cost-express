@@ -35,8 +35,23 @@ exports.viewSingle = async function(req, res) {
     }
 }
 
-
 exports.viewEditScreen = async function(req, res) {
+  try {
+    let item = await Item.findSingleById(req.params.id, req.visitorId)
+    if (item.isVisitorOwner) {
+      res.render("edit-item", {item: item})
+    } else {
+      req.flash("errors", "You do not have permission to perform that action.")
+      req.session.save(() => res.redirect("/"))
+    }
+  } catch {
+    res.render("404")
+  }
+}
+
+// chapter 86 was a note that explained to swap out this code for the code above
+/*Why: We pass our Post model the current user ID so it can figure out if the current request is the owner of the post or not. So then for the if statement condition, use the isVisitorOwner property instead. Later in the course authorId is removed from returned Post objects entirely.*/
+/* exports.viewEditScreen = async function(req, res) {
   try {
     let item = await Item.findSingleById(req.params.id)
     if(item.authorId == req.visitorId) {
@@ -49,7 +64,7 @@ exports.viewEditScreen = async function(req, res) {
   } catch {
     res.render("404")
   }
-}
+} */
 
 exports.edit = function(req, res) {
   let item = new Item(req.body, req.visitorId, req.params.id)
@@ -79,5 +94,17 @@ exports.edit = function(req, res) {
     req.session.save(function() {
       res.redirect('/')
     })
+  })
+}
+
+exports.delete = function(req, res) {
+  Item.delete(req.params.id, req.visitorId).then(() => {
+    req.flash("success", "Item was successfully deleted.")
+    req.session.save(() => {
+      res.redirect(`/profile/${req.session.user.username}`)
+    })
+  }).catch(() => {
+    req.flash("errors", "You do not have permission to perform that action.")
+    req.session.save(() => res.redirect("/"))
   })
 }
