@@ -13,7 +13,7 @@
   <body>
     <header class="header-bar mb-3">
       <div class="container d-flex flex-column flex-md-row align-items-center p-3">
-        <h4 class="my-0 mr-md-auto font-weight-normal"><a href="/" class="text-white">CarCostApp</a></h4>
+        <h4 class="my-0 mr-md-auto font-weight-normal"><a href="/" style="text-decoration: none;" class="text-white"><i class="fas fa-car mr-2"></i>CarCostApp</a></h4>
 
         <% if (user) { %>
         <div class="flex-row my-3 my-md-0">
@@ -23,9 +23,9 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn btn-sm btn-secondary">Sign Out</button>
           </form>
-          <!--
-<a class="ml-2" style="color: orange;" href="/profile/<%= user.username %>/settings"  data-toggle="tooltip" data-placement="top" title="Settings"><i class="fas fa-user-cog"></i></a>
-          -->
+          
+<!-- <a class="ml-2" style="color: white;" href="/profile/<%= user.username %>/settings"  data-toggle="tooltip" data-placement="top" title="Settings"><i class="fas fa-cog"></i></a>
+-->
           
           
         </div>

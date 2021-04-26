@@ -26,6 +26,23 @@ Item.prototype.cleanUp = function () {
     this.data.miles = "1"}
   if (typeof this.data.link != "string") {
     this.data.link = ""}
+  // If user enters zero for cost or miles set it to one
+  if (this.data.cost <= "0") {
+    this.data.cost = "1"}
+  if (this.data.miles <= "0") {
+    this.data.miles = "1"}
+    // If user enters absurdly high numbr for cost or miles set it to max
+  if (this.data.cost > "500000") {
+    this.data.cost = "500000"}
+  if (this.data.miles > "500000") {
+    this.data.miles = "500000"}
+    // if link doesn start with http or https then set to empty
+    if (this.data.link.startsWith("http://") && this.data.link.startsWith("http://") ) {
+      console.log("Link Looks Good")
+    } else {
+      this.data.link = ""
+    }
+  
 
     // get rid of any bogus properties
     // .toFixed(2) not working on CPRM property
@@ -34,7 +51,8 @@ Item.prototype.cleanUp = function () {
       cost: parseInt(this.data.cost, 10),
       miles: parseInt(this.data.miles, 10),
       remaining_months: parseInt(((this.useful_miles - this.data.miles) / this.monthly_miles)),
-      cost_per_remaining_month: this.data.cost / parseInt((this.useful_miles - this.data.miles) / this.monthly_miles),
+      /* cost_per_remaining_month: this.data.cost / (parseInt(this.useful_miles - this.data.miles) / this.monthly_miles), */
+      cost_per_remaining_month: parseInt(this.data.cost / ((this.useful_miles - this.data.miles) / this.monthly_miles)).toLocaleString("en-US"),
       link: this.data.link.trim(),
       createdDate: new Date(),
       author: ObjectId(this.userid)
@@ -51,20 +69,18 @@ Item.prototype.validate = function () {
     this.errors.push("You must provide the miles.")
   }
   // allowing the link to be empty
-  if (this.data.link == "") {
-    this.data.link = "No Link Provided"
-  }
+  
 }
 Item.prototype.create = function () {
   return new Promise((resolve, reject) => {
     this.cleanUp()
     this.validate()
     // checkout typeOf for cost and miles properties
-    console.log(
-      "Cost is a " + (typeof(this.data.cost))
-    + " and miles is a " + (typeof(this.data.miles))
-    + " and remaining_months is a " + typeof(this.data.remaining_months)
-    + " and cost_per_remaining_month is a " + typeof(this.data.cost_per_remaining_month))
+    //console.log(
+      //"Cost is a " + (typeof(this.data.cost))
+    //"Miles is a " + (typeof(this.data.miles)) + " and it's value is " + (this.data.miles))
+    // + " and remaining_months is a " + typeof(this.data.remaining_months)
+    //+ " and cost_per_remaining_month is a " + typeof(this.data.cost_per_remaining_month))
     
     
     if (!this.errors.length) {

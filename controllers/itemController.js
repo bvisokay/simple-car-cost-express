@@ -18,7 +18,7 @@ exports.create = function (req, res) {
       req.session.save(() => res.redirect(`/profile/${req.session.user.username}`))
     })
     .catch(function (errors) {
-      errors.forEach(error => res.flash("errors", errors))
+      errors.forEach(error => req.flash("errors", error))
       req.session.save(() => res.redirect("create-post"))
     })
 }
@@ -46,6 +46,17 @@ exports.viewEditScreen = async function(req, res) {
     }
   } catch {
     res.render("404")
+  }
+}
+
+
+exports.viewSettingsScreen = function(req, res) {
+  try {
+    res.render("settings")
+    console.log(req.session.user.username)
+
+  } catch {
+    res.send('viewSettingsScreen function failed')
   }
 }
 

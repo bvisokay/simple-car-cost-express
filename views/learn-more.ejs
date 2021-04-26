@@ -1,0 +1,58 @@
+<%- include('includes/header') %>
+
+<div class="container py-md-5 container--narrow">
+  <%- include("includes/flash") %>
+  <div>
+    <h2>The Basic Idea</h2>
+    <p class="lead text-muted">When calculating the cost of a car it may be useful to estimate the useful life for the vehicle in miles (for example: I expect this car to last 150,000 miles). It's also a good idea to have an idea of how much driving you do on a yearly basis (for example: I drive around 15,000 miles a year). Using these assumptions, along with the current mileage and price of a car, you can surmise how many useful months remaining for the car and how much of of these months will cost you.</p>
+    <h2>Months Remaining</h2>
+    <p class="lead text-muted">This is calculated by taking the total useful life in miles less the current miles and dividing this result by how many miles you drive per month.</p>
+    <h2>Cost Per Remaining Month</h2>
+    <p class="lead text-muted">This is calculated by dividing a vehicle's price by how many months are remaining.</p>
+    <h2>Default Values</h2>
+    <p class="lead text-muted">The default values used for useful life in miles is 150,000 miles and for Miles driven in a year is 15,000. These values can be customized by logging in and visiting your settings.</p>
+    <h2>These are rough approximations</h2>
+    <p class="lead text-muted">These are very oversimplied metrics</p>
+    <h2>Based on Assumptions</h2>
+    <p class="lead text-muted">Useful life is very subjective and is an estimation.</p>
+    <p class="lead text-muted">All else equal is impossible as no two cars are exactly the same. Some vehicles are more expensive for a reason.</p>
+    <p class="lead text-muted">Residual Value (or Value at the end of the vehicle's useful life) is assumed to be zero although thi is very unlikely. Also want to keep in mind that many vehicles "retain their value" better than others and thus have higher "resale value".</p>
+    <h2>Nevertheless</h2>
+    <p class="lead text-muted">These metrics can be very helpful.</p>
+  </div>
+</div>
+
+<% if (user) { %>
+  <p>User is logged In</p>
+<% } else { %>
+  <hr class="mt-5 mb-5">
+  <!-- <div class="col-lg-5 pl-lg-5 pb-3 py-lg-5"> -->
+    <div class="container col-lg-5">
+    <h2 class="mb-3"> Register for a Free Account</h2>
+    <form action="/register" method="POST" id="registration-form">
+  
+      <div class="form-group">
+        <label for="username-register" class="text-muted mb-1"><small>Username</small></label>
+        <input name="username" id="username-register" class="form-control" type="text" placeholder="Pick a username" autocomplete="off" />
+      </div>
+  
+      <div class="form-group">
+        <label for="email-register" class="text-muted mb-1"><small>Email</small></label>
+        <input name="email" id="email-register" class="form-control" type="text" placeholder="you@example.com" autocomplete="off" />
+      </div>
+  
+      <div class="form-group">
+        <label for="password-register" class="text-muted mb-1"><small>Password</small></label>
+        <input name="password" id="password-register" class="form-control" type="password" placeholder="Create a password" />
+      </div>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <button type="submit" class="py-2 mt-4 btn btn-md btn-success btn-block">Sign up for OurApp</button>
+    </form>
+  </div>
+<% } %>
+
+
+
+
+
+<%- include('includes/footer') %>

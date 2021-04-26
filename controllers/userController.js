@@ -110,6 +110,11 @@ exports.home = function (req, res) {
   }
 }
 
+exports.learnMore = function (req, res) {
+    res.render("learn-more")
+}
+
+
 exports.ifUserExists = function(req, res, next) {
   User.findByUsername(req.params.username).then((userDocument) => {
     req.profileUser = userDocument
@@ -119,18 +124,28 @@ exports.ifUserExists = function(req, res, next) {
   })
 }
 
-//needed if you want to show profile name on the profile screen
-exports.profilePostsScreen = function(req, res) {
-  // ask our item model for items by a certain author id
-  Item.findByAuthorId(req.profileUser._id).then(function(items) {
-    res.render('profile', {
-      items: items,
-      profileUsername: req.profileUser.username
-      // profileAvatar: req.profileUser.avatar
-    })
-  }).catch(function() {
-    res.render("404")
-  })
 
-  
+exports.profilePostsScreen = function(req, res) {
+  // only if visitor is the owner then show the page
+  // else show a 404 page with a flash message
+  if (req.params.username == req.session.user.username) {
+    // ask our item model for items by a certain author id
+    Item.findByAuthorId(req.profileUser._id).then(function(items) {
+      // notice the passage of data to show profile name on the profile screen template
+      res.render('profile', {
+        items: items,
+        profileUsername: req.profileUser.username
+        // profileAvatar: req.profileUser.avatar
+        
+        })
+      }).catch(function() {res.render("404")})
+  } else {
+    req.flash("errors", "You do not have permission to perform that action.")
+    req.session.save(() => res.redirect("404"))
+  }
 }
+
+
+        
+
+
