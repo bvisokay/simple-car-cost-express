@@ -5,13 +5,15 @@ const ObjectId = require('mongodb').ObjectId
 // Receiving incoming form data from user req.body
 // Doing this with parameter called data and storing
 
-let Item = function (data, userid, requestedItemId) {
+let Item = function (data, userId, usefulMiles, monthlyMiles, requestedItemId) {
   this.data = data
   this.errors = []
-  this.userid = userid
+  this.userid = userId
+  this.useful_miles = usefulMiles
+  this.monthly_miles = monthlyMiles
   this.requestedItemId = requestedItemId
-  this.useful_miles = 150000
-  this.monthly_miles = 1250
+  
+  
 }
 
 Item.prototype.cleanUp = function () {
@@ -32,10 +34,11 @@ Item.prototype.cleanUp = function () {
   if (this.data.miles <= "0") {
     this.data.miles = "1"}
     // If user enters absurdly high numbr for cost or miles set it to max
-  if (this.data.cost > "500000") {
+    // not working with data from sessions?
+  /* if (this.data.cost > "500000") {
     this.data.cost = "500000"}
   if (this.data.miles > "500000") {
-    this.data.miles = "500000"}
+    this.data.miles = "500000"} */
     // if link doesn start with http or https then set to empty
     if (this.data.link.startsWith("http://") && this.data.link.startsWith("http://") ) {
       console.log("Link Looks Good")
@@ -50,9 +53,9 @@ Item.prototype.cleanUp = function () {
       description: this.data.description.trim(),
       cost: parseInt(this.data.cost, 10),
       miles: parseInt(this.data.miles, 10),
-      remaining_months: parseInt(((this.useful_miles - this.data.miles) / this.monthly_miles)),
+      remaining_months: Math.round(parseFloat(((this.useful_miles - this.data.miles) / this.monthly_miles))),
       /* cost_per_remaining_month: this.data.cost / (parseInt(this.useful_miles - this.data.miles) / this.monthly_miles), */
-      cost_per_remaining_month: parseInt(this.data.cost / ((this.useful_miles - this.data.miles) / this.monthly_miles)).toLocaleString("en-US"),
+      cost_per_remaining_month: parseFloat((parseFloat(this.data.cost, 10) / parseFloat((this.useful_miles - this.data.miles) / this.monthly_miles)).toFixed(0)),
       link: this.data.link.trim(),
       createdDate: new Date(),
       author: ObjectId(this.userid)
@@ -112,7 +115,6 @@ Item.prototype.update = function() {
               let status = await this.actuallyUpdate()
               resolve(status) 
           } else {
-            
               reject()
           }
       } catch {
@@ -126,7 +128,7 @@ Item.prototype.actuallyUpdate = function() {
       this.cleanUp()
       this.validate()
       if (!this.errors.length) {
-          await itemsCollection.findOneAndUpdate({_id: new ObjectId(this.requestedItemId)}, {$set: {description: this.data.description, cost: this.data.cost, miles: this.data.miles,link: this.data.link }})
+          await itemsCollection.findOneAndUpdate({_id: new ObjectId(this.requestedItemId)}, {$set: {description: this.data.description, cost: this.data.cost, miles: this.data.miles, remaining_months: this.data.remaining_months, cost_per_remaining_month: this.data.cost_per_remaining_month, link: this.data.link }})
           resolve("success")
       } else {
           resolve("failure")

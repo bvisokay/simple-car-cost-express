@@ -3,16 +3,21 @@
 <div class="container py-md-5 container--narrow">
   <%- include("includes/flash") %>
   
-  <div class="mt-2 pt-2 mb-3 text-center">
+  <div class="mt-2 pt-2 mb-5">
+    <h2 class="mb-4">Hello <strong><%= profileUsername.charAt(0).toUpperCase() + profileUsername.slice(1) %>,</strong></h2>
     <% if (items.length > 0) { %>
-      <h4>Hello <strong><%= profileUsername.charAt(0).toUpperCase() + profileUsername.slice(1) %></strong>. You currently have <%= items.length %>
+      <h6 class="text-muted">You currently have <%= items.length %>
         <% if(items.length == 1) { %>
-          item in your list.</h4>
+          item
         <% } else { %>
-          items in your list.</h4>
+          items
         <% } %>
+        in your list. <h6>
+        <h6 class="text-muted">Edit your <a href="#">Settings</a> or <a href="/learn-more">Learn More</a> about "Remaining Months" and "Cost per Remaining Month."</h6>
     <% } else { %>
-      <h4>Hello <strong><%= profileUsername.charAt(0).toUpperCase() + profileUsername.slice(1) %></strong>.<br> </h4><h4 class="lead text-muted"><a style="text-decoration: none" href="/create-item"><strong>Add a Car</strong></a> to your list to get started.</h4>
+      <h6 class="text-muted mb-3"><a href="/create-item">Add a Car</a> to your list to get started.<h6>
+        
+        <h6 class="text-muted">You can also edit your <a href="#">Settings</a> or <a href="/learn-more">Learn More</a> about "Remaining Months" and "Cost per Remaining Month."</h6>
       <% } %>
   </div>
 
@@ -48,17 +53,13 @@
     <span class="list-group-item list-group-flush">Cost: $<%= item.cost.toLocaleString("en-US") %></span>
     <span class="list-group-item list-group-flush">Miles: <%= item.miles.toLocaleString("en-US") %></span>
     <span class="list-group-item list-group-flush">Remaining Months: <%= item.remaining_months %></span>
-    <span class="list-group-item list-group-flush">Cost Per Remaining Months: $<%= item.cost_per_remaining_month %></span>
+    <span class="list-group-item list-group-flush">Cost Per Remaining Months: $<%= item.cost_per_remaining_month.toLocaleString("en-US") %></span>
     
       
     
   </div>
    <% }) %>
   </div>
-</div>
-
-<div class="mt-1 pt-2 mb-5 text-center">
-  <p class="text-muted small">Edit your <a href="#">Settings</a> or <a href="/learn-more">learn more</a> about "Remaining Months" and "Cost per Remaining Month."</p>
 </div>
 
 <%- include('includes/footer')  %>

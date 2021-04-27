@@ -4,22 +4,24 @@
 
   <%- include("includes/flash") %>
 
-  <a class="small font-weight-bold" href="">&laquo; Back to List</a>
-  
-  <form class="mt-3" action="#" method="POST">
-    <div class="form-group">
-      <label for="item-useful-miles" class="text-muted mb-1"><small>Assumed Useful Life in Miles</small></label>
-      <input required name="description" value="" id="item-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+  <a class="small font-weight-bold" href="/profile/<%= profileUsername %>">&laquo; Back to List</a>
+
+  <h2 class="mt-3">Settings</h2>
+
+  <form class="mt-4" action="/profile/<%= profileUsername %>/settings" method="POST">
+    <div class="form-group mb-4">
+      <label for="item-useful-miles" class="text-muted mb-1"><small>Useful Life in Miles</small></label>
+      <input required name="useful_miles" value="<%= profileUsefulMiles %>" id="item-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <div class="form-group">
-      <label for="item-monthly-miles" class="text-muted mb-1"><small>Assumed Miles Driven Per Month</small></label>
-      <input name="link" value="" id="item-link" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+    <div class="form-group mb-4">
+      <label for="item-monthly-miles" class="text-muted mb-1"><small>Miles Driven Per Month</small></label>
+      <input required name="monthly_miles" value="<%= profileMonthlyMiles %>" id="item-link" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
     </div>
 
     <!-- protects against csrf attack -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
-
+    <p class="small text-muted mb-4">Changes will not modify existing items. After clicking "Save Updates" you must log in again for any changes to take effect.</p>
     <button class="btn btn-primary">Save Updates</button>
   </form>
 </div>

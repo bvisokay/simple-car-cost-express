@@ -4,16 +4,11 @@ const usersCollection = require("../db").db().collection("users")
 // helps validate user registration form
 const validator = require("validator")
 
-// if implementing gravatar then pass it to User as a second parameter
 let User = function (data) {
   this.data = data
   this.errors = []
-/*   if (getAvatar == undefined) {
-    getAvatar = false
-  }
-  if (getAvatar) {
-    this.getAvatar()
-  } */
+  this.useful_miles = 100000,
+  this.monthly_miles = 1250
 }
 
 User.prototype.cleanUp = function () {
@@ -33,7 +28,9 @@ User.prototype.cleanUp = function () {
     username: this.data.username.trim().toLowerCase(),
     email: this.data.email.trim().toLowerCase(),
     //password doesn't need
-    password: this.data.password
+    password: this.data.password,
+    useful_miles: this.useful_miles,
+    monthly_miles: this.monthly_miles
   }
 }
 
@@ -139,15 +136,12 @@ User.prototype.register = function () {
   })
 }
 
-//using gravatar as link to profile
-/* User.prototype.getAvatar = function () {
-  this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`
-} */
 
-//required for a couple of actions including frontend-js registrationForm validation
+// required for a couple of actions including frontend-js registrationForm validation
+// also going to try and use for settings screen
 User.findByUsername = function (username) {
   return new Promise(function (resolve, reject) {
-    if (typeof username != "string") {
+    if (typeof(username) != "string") {
       reject()
       //prevent further execution of the function
       return
@@ -157,14 +151,14 @@ User.findByUsername = function (username) {
       .findOne({ username: username })
       .then(function (userDoc) {
         if (userDoc) {
-          //pass a param of true in addition to userdoc if using gravatar
           userDoc = new User(userDoc)
           // customizing userDoc to only get what we need and not show hashed password
           userDoc = {
             // have _id so we can later look up posts by this user
             _id: userDoc.data._id,
             username: userDoc.data.username,
-            /* avatar: userDoc.avatar */
+            useful_miles: userDoc.data.useful_miles,
+            monthly_miles: userDoc.data.monthly_miles
           }
           resolve(userDoc)
         } else {
@@ -176,6 +170,48 @@ User.findByUsername = function (username) {
       })
   })
 }
+
+
+// Updating User Settings
+User.prototype.update = function(requestedUsername) {
+  console.log("update function ran and requested username parameter came in as " + requestedUsername)
+  return new Promise(async (resolve, reject) => {
+      try {
+        console.log("Try Block in Update Function Ran")
+          let user = await User.findByUsername(requestedUsername)
+          //requestedUsername is coming back as brandon
+          if (2 + 2 == 4) {
+              // actually update db
+              let status = await this.actuallyUpdate(requestedUsername)
+              resolve(status) 
+          } else {
+            
+              reject()
+          }
+      } catch {
+          reject()
+      }
+  })
+}
+
+// Updating User Settings
+User.prototype.actuallyUpdate = function(requestedUsername) {
+  console.log("actuallyUpdate function actuallyRan")
+  return new Promise(async (resolve, reject) => {
+      if (!this.errors.length) {
+        // this.username logged in console as undefined
+        // this._id logged in console as undefined
+        // req.session.user._id logged in console as undefined
+        // Working console.log("this.data.useful_miles came back as = " + this.data.useful_miles)
+        // Working console.log("this.data.monthly_miles came back as = " + this.data.monthly_miles)
+          await usersCollection.findOneAndUpdate({username: requestedUsername}, {$set: {useful_miles: parseInt(this.data.useful_miles), monthly_miles: parseInt(this.data.monthly_miles) }})
+          resolve("success")
+      } else {
+          resolve("failure")
+      }
+  })
+}
+
 
 User.doesEmailExist = function (email) {
   return new Promise(async function (resolve, reject) {
@@ -192,32 +228,6 @@ User.doesEmailExist = function (email) {
     } else {
       resolve(false)
     }
-  })
-}
-
-User.findByUsername = function(username) {
-  return new Promise(function(resolve, reject) {
-    if(typeof(username) != "string"){
-      reject()
-      return
-    }
-
-    usersCollection.findOne({username: username}).then(function(userDoc) {
-      if(userDoc) {
-        //pass true a second argument to userDoc if you are using gravatar
-        userDoc = new User(userDoc)
-        userDoc = {
-          _id: userDoc.data._id,
-          username: userDoc.data.username
-          /* avatar: userDoc.avatar */
-        }
-        resolve(userDoc)
-      } else {
-        reject()
-      }
-    }).catch(function() {
-      reject()
-    })
   })
 }
 

@@ -7,7 +7,10 @@ exports.viewCreateScreen = function (req, res) {
 
 exports.create = function (req, res) {
   // req.body contains form data the user just submitted
-  let item = new Item(req.body, req.session.user._id)
+  // req.session.user._id brings in the user is to store as author
+  // req.session.user.useful_miles, req.session.user.monthly_miles allows default to be updated in user settings
+  // initial attempt failed to just bring in req.session.user
+  let item = new Item(req.body, req.session.user._id, req.session.user.useful_miles, req.session.user.monthly_miles)
   // this method will be set up to return a promise
   item
     .create()
@@ -23,17 +26,20 @@ exports.create = function (req, res) {
     })
 }
 
+// Users do not need to view a single item on it's own page unless they are editing
+// No need for this function but keeping in case we implement user sharing later
 exports.viewSingle = async function(req, res) {
     try {
       // leverage Item model and tell it to find an item
-      // first param of req.params.id tells it which post to lookup for current url
-      // second param req.visitorId helps determine if visitor is the author of the post
+      // first argument passed of req.params.id tells it which post to lookup for current url
+      // second argument passed req.visitorId helps determine if visitor is the author of the post
       let item = await Item.findSingleById(req.params.id, req.visitorId)
        res.render('single-post-screen', {item: item})
       } catch {
        res.render("404")
     }
 }
+
 
 exports.viewEditScreen = async function(req, res) {
   try {
@@ -49,16 +55,6 @@ exports.viewEditScreen = async function(req, res) {
   }
 }
 
-
-exports.viewSettingsScreen = function(req, res) {
-  try {
-    res.render("settings")
-    console.log(req.session.user.username)
-
-  } catch {
-    res.send('viewSettingsScreen function failed')
-  }
-}
 
 // chapter 86 was a note that explained to swap out this code for the code above
 /*Why: We pass our Post model the current user ID so it can figure out if the current request is the owner of the post or not. So then for the if statement condition, use the isVisitorOwner property instead. Later in the course authorId is removed from returned Post objects entirely.*/
@@ -78,7 +74,7 @@ exports.viewSettingsScreen = function(req, res) {
 } */
 
 exports.edit = function(req, res) {
-  let item = new Item(req.body, req.visitorId, req.params.id)
+  let item = new Item(req.body, req.visitorId, req.session.user.useful_miles, req.session.user.monthly_miles, req.params.id,)
   item.update().then((status) => {
     // the post was successfully updated in the database
     // or the user did have permission, but there were validation errors
