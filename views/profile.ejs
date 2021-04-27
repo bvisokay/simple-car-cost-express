@@ -13,11 +13,11 @@
           items
         <% } %>
         in your list. <h6>
-        <h6 class="text-muted">Edit your <a href="#">Settings</a> or <a href="/learn-more">Learn More</a> about "Remaining Months" and "Cost per Remaining Month."</h6>
+        <h6 class="text-muted">Edit your <a href="/profile/<%= user.username %>/settings">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Months" metrics are calculated.</h6>
     <% } else { %>
       <h6 class="text-muted mb-3"><a href="/create-item">Add a Car</a> to your list to get started.<h6>
         
-        <h6 class="text-muted">You can also edit your <a href="#">Settings</a> or <a href="/learn-more">Learn More</a> about "Remaining Months" and "Cost per Remaining Month."</h6>
+        <h6 class="text-muted">You can also edit your <a href="/profile/<%= user.username %>/settings">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Months" metrics are calculated.</h6>
       <% } %>
   </div>
 

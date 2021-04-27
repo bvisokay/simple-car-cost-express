@@ -184,11 +184,13 @@ exports.edit = function(req, res) {
     // or the user did have permission, but there were validation errors
     if(status == "success") {
       console.log("If Block Ran since status was 'success'")
-      //post was updated in the database
-      req.flash("success", "Settings were successfully updated.")
-      req.session.save(function() {
-        res.redirect(`/profile/${req.params.username}/settings`)
+      // settings were successfully updated in the database
+      // log user out for changes to take effect on login
+      req.session.destroy(function () {
+        // redirect to home-guest template
+        res.redirect("/")
       })
+    
     } else {
       // user had permission but there were validation errors
       console.log("Else Block Ran in Edit function")
@@ -210,6 +212,7 @@ exports.edit = function(req, res) {
     })
   })
 }
+
 
 
         

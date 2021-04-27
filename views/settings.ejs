@@ -21,7 +21,7 @@
 
     <!-- protects against csrf attack -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
-    <p class="small text-muted mb-4">Changes will not modify existing items. After clicking "Save Updates" you must log in again for any changes to take effect.</p>
+    <p class=" small mb-4 alert alert-danger"> Note: Changing these settings will not modify any existing items. After clicking "Save Updates" you will be redirected to the homepage to login for changes to take effect.</p>
     <button class="btn btn-primary">Save Updates</button>
   </form>
 </div>
