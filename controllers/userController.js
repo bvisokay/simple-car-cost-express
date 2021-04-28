@@ -33,13 +33,10 @@ exports.login = function (req, res) {
     .login()
     .then(function (result) {
       // add new properties onto a session object
-      // (.user property is an object that could be set to anything)
-      // stores session data in server memory by default
-      // set session data in db using package connect-mongo (we do this in app.js)
-      // removed  avatar: user.avatar,
+      // session data set in db using package connect-mongo (we do this in app.js)
       req.session.user = { username: user.data.username, _id: user.data._id, useful_miles: user.data.useful_miles, monthly_miles: user.data.monthly_miles }
-      // tell session to manually save using save method with callback function
-      // remember a db process can take a bit to complete action
+      // tell session to manually save using save method 
+      // using callback function since db process can take a bit to complete action
       req.session.save(function () {
         // send back result
         res.redirect(`/profile/${req.session.user.username}`)
@@ -75,7 +72,6 @@ exports.register = function (req, res) {
     .register()
     .then(() => {
       //redirect to homepage but update their session data so actually logged in
-      //removed user.avatar
       req.session.user = { username: user.data.username, _id: user.data._id, useful_miles: user.data.useful_miles, monthly_miles: user.data.monthly_miles }
       // since the above action may take a while to save in db
       // manually tell session to save
@@ -102,7 +98,6 @@ exports.home = function (req, res) {
   // if current visitor or browser has session data associated with it
   // show them custom data else show them the guest template
   if (req.session.user) {
-    // also pass data into that template (username: could be called anything)
     res.redirect(`/profile/${req.session.user.username}`)
   } else {
     // also pass data from errors and regErrors arrays into the home-guest template
@@ -111,7 +106,7 @@ exports.home = function (req, res) {
 }
 
 exports.learnMore = function (req, res) {
-    res.render("learn-more")
+  res.render("learn-more")
 }
 
 
@@ -148,38 +143,32 @@ exports.profilePostsScreen = function(req, res) {
 exports.viewSettingsScreen = function(req, res) {
   // only if visitor is the owner then show the page
   if (req.params.username == req.session.user.username) {
-    // ask our post model for items by a certain username
+    // ask our user model for properties attcahed to ceratin username
     User.findByUsername(req.profileUser.username).then(function() {
       res.render("settings", {
         profileUsername: req.profileUser.username,
         profileUsefulMiles: req.profileUser.useful_miles,
         profileMonthlyMiles: req.profileUser.monthly_miles
       })
-      console.log(req.session.user)
-    }).catch(function() {
-      console.log("catch block ran")
-      res.render("404")
-    })
-  try {
-    
-  } catch {
-    
-  } } else {
-    console.log("visitor is not the owner, else block ran")
-    console.log("visitor id equals " + req.visitorId)
-    res.render("404")
-    
+      console.log("req.isVisitor is set to  " + req.isVisitor)
+      console.log("visitor id equals " + req.visitorId)
+    }).catch(function() {res.redirect("404")})
+ } else {
+    // if the visitor is not the owner then this will run
+    console.log("visitor is not the owner, else block ran. visitorId: " + req.visitorId)
+    req.flash("errors", "You do not have permission to perform that action.")
+    req.session.save(() => res.render("/"))
   } // closes else block
 } // closes viewSettingsScreenFunction
 
 
 /// Customizing User Settings
 exports.edit = function(req, res) {
-  console.log("Edit function ran")
+  //console.log("Edit function ran")
   let user = new User(req.body, req.params.username)
   user.update(req.params.username).then((status) => {
-    console.log("Then function ran in Edit Function")
-    console.log("Status came back as: " + status)
+    //console.log("Then function ran in Edit Function")
+    //console.log("Status came back as: " + status)
     // the settings were successfully updated in the database
     // or the user did have permission, but there were validation errors
     if(status == "success") {
@@ -193,7 +182,7 @@ exports.edit = function(req, res) {
     
     } else {
       // user had permission but there were validation errors
-      console.log("Else Block Ran in Edit function")
+      // console.log("Else Block Ran in Edit function")
       user.errors.forEach(function(error) {
         req.flash("errors", error)
       })
@@ -203,7 +192,7 @@ exports.edit = function(req, res) {
     }
 
   }).catch(() => {
-    console.log("Catch Function Ran in Edit Function")
+    // console.log("Catch Function Ran in Edit Function")
     // if a user with requested id doesn't exit
     // or if the current visitor is not the owner
     req.flash("errors", "You do not have permission to perform that action")

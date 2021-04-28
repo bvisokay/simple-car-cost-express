@@ -15,7 +15,7 @@ router.post("/doesEmailExist", userController.doesEmailExist)
 router.get("/profile/:username",  userController.mustBeLoggedIn, userController.ifUserExists, userController.profilePostsScreen)
 
 
-router.get("/profile/:username/settings", userController.ifUserExists, userController.viewSettingsScreen)
+router.get("/profile/:username/settings", userController.mustBeLoggedIn, userController.ifUserExists, userController.viewSettingsScreen)
 router.post("/profile/:username/settings", userController.edit)
 
 //item related routes
