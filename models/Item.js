@@ -71,20 +71,13 @@ Item.prototype.validate = function () {
   if (this.data.miles == "") {
     this.errors.push("You must provide the miles.")
   }
-  // allowing the link to be empty
+  // link field allowed to be empty
   
 }
 Item.prototype.create = function () {
   return new Promise((resolve, reject) => {
     this.cleanUp()
     this.validate()
-    // checkout typeOf for cost and miles properties
-    //console.log(
-      //"Cost is a " + (typeof(this.data.cost))
-    //"Miles is a " + (typeof(this.data.miles)) + " and it's value is " + (this.data.miles))
-    // + " and remaining_months is a " + typeof(this.data.remaining_months)
-    //+ " and cost_per_remaining_month is a " + typeof(this.data.cost_per_remaining_month))
-    
     
     if (!this.errors.length) {
       // Save Car Item in DB
@@ -222,8 +215,7 @@ Item.delete = function(itemIdToDelete, currentUserId) {
       reject()
     }
   })
-}
-
+} // closes delete
 
 
 

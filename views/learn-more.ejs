@@ -13,7 +13,7 @@
     <p>The default values used for "useful life" is 150,000 miles. The default value for "expected miles driven" in a year is 15,000. These values can be customized by visiting your
       
       <% if (user) { %>
-        <a href="/profile/<%= user.username %>/settings">Settings</a>.</p>
+        <a href="/settings/<%= user.username %>">Settings</a>.</p>
       <% } else { %>
         settings.</p>
         

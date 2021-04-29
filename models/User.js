@@ -154,11 +154,11 @@ User.findByUsername = function (username) {
           userDoc = new User(userDoc)
           // customizing userDoc to only get what we need and not show hashed password
           userDoc = {
-            // have _id so we can later look up posts by this user
+            // have _id so we can later look up items by this user
             _id: userDoc.data._id,
             username: userDoc.data.username,
             useful_miles: userDoc.data.useful_miles,
-            monthly_miles: userDoc.data.monthly_miles
+            monthly_miles: userDoc.data.monthly_miles,
           }
           resolve(userDoc)
         } else {
@@ -173,41 +173,91 @@ User.findByUsername = function (username) {
 
 
 // Updating User Settings
-User.prototype.update = function(requestedUsername) {
-  console.log("update function ran and requested username parameter came in as " + requestedUsername)
+User.prototype.update = function(requestedUsername, visitorUsername) {
+  //console.log("update function ran and requested username parameter came in as " + requestedUsername)
   return new Promise(async (resolve, reject) => {
       try {
-        console.log("Try Block in Update Function Ran")
+          // console.log("Try Block in Update Function Ran")
           let user = await User.findByUsername(requestedUsername)
-          //requestedUsername is coming back as brandon
-          if (2 + 2 == 4) {
+          if (requestedUsername == visitorUsername) {
               // actually update db
               let status = await this.actuallyUpdate(requestedUsername)
               resolve(status) 
           } else {
-            
               reject()
-          }
+          } // closes try
       } catch {
           reject()
-      }
-  })
-}
+      } // closes catch
+  }) // closes promise
+} // closes update
 
-// Updating User Settings
+User.prototype.cleanAndValidateSettings = function() {
+  //console.log("cleanAndValidateSettings Function Ran")
+  
+  // if user input is not a string set it to empty string
+  
+  //console.log("TypeOf for useful miles is " + typeof(this.data.useful_miles))
+  if (typeof this.data.useful_miles != "string") {
+    this.data.useful_miles = ""
+  }
+
+  //console.log("TypeOf for useful miles is " + typeof(this.data.monthly_miles))
+  if (typeof this.data.useful_miles != "string") {
+    this.data.useful_miles = ""
+  }
+  
+  // convert user input to a number
+  this.data.useful_miles = parseInt(this.data.useful_miles)
+  this.data.monthly_miles = parseInt(this.data.monthly_miles)
+  //console.log("TypeOf for useful miles is " + typeof(this.data.useful_miles))
+  //console.log("TypeOf for useful miles is " + typeof(this.data.monthly_miles))
+
+  // if user input is not a number use hard-coded default values
+  if (isNaN(this.data.useful_miles)) {
+    this.data.useful_miles = 150000
+  }
+
+  if (isNaN(this.data.monthly_miles)) {
+    this.data.monthly_miles = 1250
+  }
+
+  if (this.data.useful_miles == "") {
+    this.data.useful_miles = 150000
+  }
+  if (this.data.useful_miles < 100) {
+    this.errors.push("You must provide a value greater than 100.")
+  }
+  if (this.data.useful_miles > 1000000) {
+    this.errors.push("You must provide a value less than 1000000.")
+  }
+
+  if (this.data.monthly_miles == "") {
+    this.data.monthly_miles = 1250
+  }
+  if (this.data.monthly_miles < 1) {
+    this.errors.push("You must provide a value greater than 1.")
+  }
+  if (this.data.monthly_miles > 10000) {
+    this.errors.push("You must provide a value less than 10000.")
+  }
+  
+} // Closes Function
+
+
+// Updating User Settings in Database After Passing Validation Checks
 User.prototype.actuallyUpdate = function(requestedUsername) {
-  console.log("actuallyUpdate function actuallyRan")
+  // console.log("actuallyUpdate function actuallyRan")
   return new Promise(async (resolve, reject) => {
-      if (!this.errors.length) {
-        // this.username logged in console as undefined
-        // this._id logged in console as undefined
-        // req.session.user._id logged in console as undefined
-        // Working console.log("this.data.useful_miles came back as = " + this.data.useful_miles)
-        // Working console.log("this.data.monthly_miles came back as = " + this.data.monthly_miles)
-          await usersCollection.findOneAndUpdate({username: requestedUsername}, {$set: {useful_miles: parseInt(this.data.useful_miles), monthly_miles: parseInt(this.data.monthly_miles) }})
+    this.cleanAndValidateSettings()  
+    if (!this.errors.length) {
+        // this.username, this._id, req.session.user._id, logged in console as undefined
+        // remember there is no request data in model files
+          await usersCollection.findOneAndUpdate({username: requestedUsername}, {$set: {useful_miles: this.data.useful_miles, monthly_miles: this.data.monthly_miles }})
           resolve("success")
       } else {
           resolve("failure")
+          //console.log("actually Update was a failure")
       }
   })
 }

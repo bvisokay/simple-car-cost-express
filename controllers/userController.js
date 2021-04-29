@@ -126,13 +126,11 @@ exports.profilePostsScreen = function(req, res) {
   if (req.params.username == req.session.user.username) {
     // ask our item model for items by a certain author id
     Item.findByAuthorId(req.profileUser._id).then(function(items) {
-      // notice the passage of data to show profile name on the profile screen template
       res.render('profile', {
         items: items,
         profileUsername: req.profileUser.username
-        // profileAvatar: req.profileUser.avatar
-        
         })
+        //console.log(items)
       }).catch(function() {res.render("404")})
   } else {
     req.flash("errors", "You do not have permission to perform that action.")
@@ -143,21 +141,18 @@ exports.profilePostsScreen = function(req, res) {
 exports.viewSettingsScreen = function(req, res) {
   // only if visitor is the owner then show the page
   if (req.params.username == req.session.user.username) {
-    // ask our user model for properties attcahed to ceratin username
+    // ask our user model for properties attached to certain username
     User.findByUsername(req.profileUser.username).then(function() {
       res.render("settings", {
         profileUsername: req.profileUser.username,
         profileUsefulMiles: req.profileUser.useful_miles,
         profileMonthlyMiles: req.profileUser.monthly_miles
       })
-      console.log("req.isVisitor is set to  " + req.isVisitor)
-      console.log("visitor id equals " + req.visitorId)
-    }).catch(function() {res.redirect("404")})
+    }).catch(function() {res.render("404")})
  } else {
     // if the visitor is not the owner then this will run
-    console.log("visitor is not the owner, else block ran. visitorId: " + req.visitorId)
     req.flash("errors", "You do not have permission to perform that action.")
-    req.session.save(() => res.render("/"))
+    req.session.save(() => res.redirect("404"))
   } // closes else block
 } // closes viewSettingsScreenFunction
 
@@ -166,20 +161,25 @@ exports.viewSettingsScreen = function(req, res) {
 exports.edit = function(req, res) {
   //console.log("Edit function ran")
   let user = new User(req.body, req.params.username)
-  user.update(req.params.username).then((status) => {
+
+  // pssing the update function requestedUsername and visitorUsername
+  user.update(req.params.username, req.session.user.username).then((status) => {
     //console.log("Then function ran in Edit Function")
     //console.log("Status came back as: " + status)
     // the settings were successfully updated in the database
     // or the user did have permission, but there were validation errors
     if(status == "success") {
-      console.log("If Block Ran since status was 'success'")
+      // console.log("If Block Ran since status was 'success'")
       // settings were successfully updated in the database
       // log user out for changes to take effect on login
-      req.session.destroy(function () {
+
+      res.redirect(`/settings/${req.params.username}`)
+      /* req.session.destroy(function () {
         // redirect to home-guest template
         res.redirect("/")
-      })
-    
+      }) */
+
+
     } else {
       // user had permission but there were validation errors
       // console.log("Else Block Ran in Edit function")
@@ -187,20 +187,20 @@ exports.edit = function(req, res) {
         req.flash("errors", error)
       })
         req.session.save(function() {
-          res.redirect(`/profile/${req.params.username}/settings`)
+          res.redirect(`/settings/${req.params.username}`)
         })
-    }
-
+    } // closes else block
   }).catch(() => {
     // console.log("Catch Function Ran in Edit Function")
     // if a user with requested id doesn't exit
     // or if the current visitor is not the owner
     req.flash("errors", "You do not have permission to perform that action")
     req.session.save(function() {
-      res.redirect('/')
-    })
-  })
-}
+      /* res.redirect('/') */
+      res.send("catch block ran in Update function")
+      })
+  }) // Closes Catch
+} //Closes Update
 
 
 

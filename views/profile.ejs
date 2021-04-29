@@ -3,7 +3,7 @@
 <div class="container py-md-5 container--narrow">
   <%- include("includes/flash") %>
   
-  <div class="mt-2 pt-2 mb-5">
+  <div class="mt-2 pt-2 mb-3">
     <h2 class="mb-4">Hello <strong><%= profileUsername.charAt(0).toUpperCase() + profileUsername.slice(1) %>,</strong></h2>
     <% if (items.length > 0) { %>
       <h6 class="text-muted">You currently have <%= items.length %>
@@ -13,17 +13,30 @@
           items
         <% } %>
         in your list. <h6>
-        <h6 class="text-muted">Edit your <a href="/profile/<%= user.username %>/settings">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Months" metrics are calculated.</h6>
-    <% } else { %>
-      <h6 class="text-muted mb-3"><a href="/create-item">Add a Car</a> to your list to get started.<h6>
-        
-        <h6 class="text-muted">You can also edit your <a href="/profile/<%= user.username %>/settings">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Months" metrics are calculated.</h6>
+        <h6 class="text-muted">Edit your <a href="/settings/<%= user.username %>">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Month" metrics are calculated.</h6><% } else { %>
+      <h6 class="text-muted mb-3"><a href="/create-item">Add a Car</a> to your list to get started.<h6><h6 class="text-muted">You can also edit your <a href="/settings/<%= user.username %>">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Month" metrics are calculated.</h6>
       <% } %>
-  </div>
+  </div> <!-- Closes header text container -->
 
-  <div class="list-group">
-   <% items.forEach(function(item) { %>
-    <div class="card mb-4">
+  <!-- <% if (items.length > 1) { %> -->
+    <div class="sort-drop-down mt-2 mb-4 pt-2 pb-2">
+      <select class="form-select pt-2 pb-2" name="Select_Sort_Order" id="sort-item">
+      <option selected value="created_date_asc">Newest Item First (by Date Created)</option>
+      <option value="cost_per_asc">Lowest Cost Per Remaining Month First</option>
+      <option value="cost_per_desc">Highest Cost Per Rem Month First</option>
+      <option value="mos_remain_asc">Lowest Months Remaining First</option>
+      <option value="mos_remain_desc">Highest Months Remaining First</option>
+      <option value="cost_asc">Lowest Price First</option>
+      <option value="cost_desc">Highest Price First</option>
+      <option value="miles_asc">Lowest Mileage First</option>
+      <option value="miles_desc">Highest Mileage First</option>
+      </select>
+      </div>
+  <!-- <% } %> -->
+
+  
+
+  <div class="list-group"><% items.forEach(function(item) { %><div class="card mb-4">
     <span class="list-group-item list-group-item-primary">
       <strong><%= item.description %></strong>
 
@@ -47,19 +60,18 @@
         </form><!-- form button ends here -->
       </span><!-- closes edit and delete span floated right here -->
 
-    </span>
+    </span> <!-- closes list-group-item-primary span -->
    
     
-    <span class="list-group-item list-group-flush">Cost: $<%= item.cost.toLocaleString("en-US") %></span>
-    <span class="list-group-item list-group-flush">Miles: <%= item.miles.toLocaleString("en-US") %></span>
-    <span class="list-group-item list-group-flush">Remaining Months: <%= item.remaining_months %></span>
-    <span class="list-group-item list-group-flush">Cost Per Remaining Months: $<%= item.cost_per_remaining_month.toLocaleString("en-US") %></span>
+    <span class="list-group-item list-group-flush">Cost: $<span class="cost-value"><%= item.cost.toLocaleString("en-US") %></span></span>
+    <span class="list-group-item list-group-flush">Miles: <span class="miles-value"><%= item.miles.toLocaleString("en-US") %></span></span>
+    <span class="list-group-item list-group-flush">Remaining Months: <span class="months-value"><%= item.remaining_months %></span><span class="text-muted small"> (~<%= (item.remaining_months / 12).toFixed(1) %> Years)</span></span>
+    <span class="list-group-item list-group-flush">Cost Per Remaining Month: $<span class="per-value"><%= item.cost_per_remaining_month.toLocaleString("en-US") %></span></span>
     
-      
-    
-  </div>
+  </div> <!-- closes card -->
+
    <% }) %>
-  </div>
-</div>
+  </div> <!-- closes list group -->
+</div> <!-- closes container -->
 
 <%- include('includes/footer')  %>
