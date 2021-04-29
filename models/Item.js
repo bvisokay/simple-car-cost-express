@@ -40,7 +40,7 @@ Item.prototype.cleanUp = function () {
   if (this.data.miles > "500000") {
     this.data.miles = "500000"} */
     // if link doesn start with http or https then set to empty
-    if (this.data.link.startsWith("http://") && this.data.link.startsWith("http://") ) {
+    if (this.data.link.startsWith("http://") || this.data.link.startsWith("https://") ) {
       console.log("Link Looks Good")
     } else {
       this.data.link = ""
