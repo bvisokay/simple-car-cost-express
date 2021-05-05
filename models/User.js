@@ -1,6 +1,10 @@
 const bcrypt = require("bcryptjs")
+// using Object ID
+const ObjectId = require('mongodb').ObjectId
 // when configuring storing sessions into db had to add .db() before collection
 const usersCollection = require("../db").db().collection("users")
+// Bring in items collection for when settings are updated want to change existing items
+const itemsCollection = require("../db").db().collection("items")
 // helps validate user registration form
 const validator = require("validator")
 
@@ -48,8 +52,8 @@ User.prototype.validate = function () {
     if (this.data.password == "") {
       this.errors.push("You must provide a password.")
     }
-    if (this.data.password.length > 0 && this.data.password.length < 12) {
-      this.errors.push("Password must be at least 8 characters.")
+    if (this.data.password.length > 0 && this.data.password.length < 6) {
+      this.errors.push("Password must be at least 6 characters.")
     }
     if (this.data.password.length > 50) {
       this.errors.push("Password cannot exceed 50 characters.")
@@ -173,15 +177,17 @@ User.findByUsername = function (username) {
 
 
 // Updating User Settings
-User.prototype.update = function(requestedUsername, visitorUsername) {
+User.prototype.update = function(requestedUsername, visitorUsername, visitorId) {
   //console.log("update function ran and requested username parameter came in as " + requestedUsername)
   return new Promise(async (resolve, reject) => {
       try {
           // console.log("Try Block in Update Function Ran")
           let user = await User.findByUsername(requestedUsername)
           if (requestedUsername == visitorUsername) {
+              // console.log to ensure receiving session id
+              console.log(visitorId)
               // actually update db
-              let status = await this.actuallyUpdate(requestedUsername)
+              let status = await this.actuallyUpdate(requestedUsername, visitorId)
               resolve(status) 
           } else {
               reject()
@@ -246,21 +252,45 @@ User.prototype.cleanAndValidateSettings = function() {
 
 
 // Updating User Settings in Database After Passing Validation Checks
-User.prototype.actuallyUpdate = function(requestedUsername) {
+User.prototype.actuallyUpdate = function(requestedUsername, visitorId) {
   // console.log("actuallyUpdate function actuallyRan")
   return new Promise(async (resolve, reject) => {
     this.cleanAndValidateSettings()  
     if (!this.errors.length) {
         // this.username, this._id, req.session.user._id, logged in console as undefined
         // remember there is no request data in model files
-          await usersCollection.findOneAndUpdate({username: requestedUsername}, {$set: {useful_miles: this.data.useful_miles, monthly_miles: this.data.monthly_miles }})
-          resolve("success")
-      } else {
-          resolve("failure")
-          //console.log("actually Update was a failure")
-      }
-  })
-}
+        await usersCollection.findOneAndUpdate({username: requestedUsername}, {$set: {useful_miles: this.data.useful_miles, monthly_miles: this.data.monthly_miles }})
+        // after udpating the user props update the existing items for that author
+        await itemsCollection.aggregate([
+          {$match: {author: new ObjectId(visitorId) }},
+          {$lookup: {from: "users", localField: "author", foreignField: "_id", as:"ownerSettings"}},
+          {$project: {
+            _id: 1,
+            description: 1,
+            cost: 1,
+            miles: 1,
+            remaining_months: 1,
+            cost_per_remaining_month: 1,
+            link: 1,
+            createdDate: 1,
+            author: 1,
+            owner: {$arrayElemAt: ["$ownerSettings", 0]}
+          }}
+        ]).forEach((x) => {
+
+          let updatedRemMos = Math.round((x.owner.useful_miles - x.miles) / x.owner.monthly_miles)
+          let costPerRemMos = Math.round(x.cost / ((x.owner.useful_miles - x.miles) / x.owner.monthly_miles))
+
+          itemsCollection.updateOne(
+            { _id: x._id },
+            {$set: {"remaining_months": updatedRemMos, "cost_per_remaining_month": costPerRemMos}}
+          )
+        }) // closes forEach
+        resolve("success")
+    } else {resolve("failure")}
+   
+  }) // closes Promise
+} // closes Actually Update
 
 
 User.doesEmailExist = function (email) {

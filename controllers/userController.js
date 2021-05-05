@@ -163,7 +163,7 @@ exports.edit = function(req, res) {
   let user = new User(req.body, req.params.username)
 
   // pssing the update function requestedUsername and visitorUsername
-  user.update(req.params.username, req.session.user.username).then((status) => {
+  user.update(req.params.username, req.session.user.username, req.session.user._id).then((status) => {
     //console.log("Then function ran in Edit Function")
     //console.log("Status came back as: " + status)
     // the settings were successfully updated in the database
@@ -171,18 +171,14 @@ exports.edit = function(req, res) {
     if(status == "success") {
       // console.log("If Block Ran since status was 'success'")
       // settings were successfully updated in the database
-      // log user out for changes to take effect on login
-
-      res.redirect(`/settings/${req.params.username}`)
-      /* req.session.destroy(function () {
-        // redirect to home-guest template
-        res.redirect("/")
-      }) */
-
-
+      // log user out for changes to take effect for new items created
+        req.session.destroy(function () {
+          // redirect to home-guest template
+          res.redirect("/")
+        })
     } else {
       // user had permission but there were validation errors
-      // console.log("Else Block Ran in Edit function")
+      console.log("Else Block Ran in Edit function")
       user.errors.forEach(function(error) {
         req.flash("errors", error)
       })
@@ -200,6 +196,7 @@ exports.edit = function(req, res) {
       res.send("catch block ran in Update function")
       })
   }) // Closes Catch
+  
 } //Closes Update
 
 
