@@ -11,7 +11,7 @@ const validator = require("validator")
 let User = function (data) {
   this.data = data
   this.errors = []
-  this.useful_miles = 100000,
+  this.useful_miles = 150000,
   this.monthly_miles = 1250
 }
 
@@ -31,7 +31,6 @@ User.prototype.cleanUp = function () {
   this.data = {
     username: this.data.username.trim().toLowerCase(),
     email: this.data.email.trim().toLowerCase(),
-    //password doesn't need
     password: this.data.password,
     useful_miles: this.useful_miles,
     monthly_miles: this.monthly_miles

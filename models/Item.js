@@ -48,13 +48,11 @@ Item.prototype.cleanUp = function () {
   
 
     // get rid of any bogus properties
-    // .toFixed(2) not working on CPRM property
     this.data = {
       description: this.data.description.trim(),
       cost: parseInt(this.data.cost, 10),
       miles: parseInt(this.data.miles, 10),
       remaining_months: Math.round(parseFloat(((this.useful_miles - this.data.miles) / this.monthly_miles))),
-      /* cost_per_remaining_month: this.data.cost / (parseInt(this.useful_miles - this.data.miles) / this.monthly_miles), */
       cost_per_remaining_month: parseFloat((parseFloat(this.data.cost, 10) / parseFloat((this.useful_miles - this.data.miles) / this.monthly_miles)).toFixed(0)),
       link: this.data.link.trim(),
       createdDate: new Date(),
@@ -129,11 +127,7 @@ Item.prototype.actuallyUpdate = function() {
   })
 }
 
-
-
 //function created to avoid duplicate code in both findSingleById and findAuthorById
-// Down below there is a $ in quotes
-// ...mongodb knows you are talking about actual field not a literal string
 Item.reusablePostQuery = function(uniqueOperations, visitorId) {
   return new Promise(async function(resolve, reject) {
 
