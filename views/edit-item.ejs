@@ -1,25 +1,24 @@
 <%- include('includes/header') %>
 
 <div class="container py-md-5 container--narrow">
-
   <%- include("includes/flash") %>
 
   <a class="small font-weight-bold" href="/profile/<%= user.username %>">&laquo; Back to List</a>
   <h2 class="mt-3">Edit Car</h2>
   <form class="mt-3" action="/item/<%= item._id %>/edit" method="POST">
     <div class="form-group">
-      <label for="post-title" class="text-muted mb-1"><small>Description (Example: 2019 Jeep Wrangler)</small></label>
+      <label for="post-title" class="text-muted mb-1"><small>Description (Example: 2020 Jeep Wrangler)</small></label>
       <input required name="description" value="<%= item.description %>" id="item-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
     </div>
 
     <div class="form-group">
       <label for="post-cost" class="text-muted mb-1"><small>Cost</small></label>
-      <input required name="cost" value="<%= item.cost %>" id="item-cost" class="form-control form-control-lg form-control-title" type="number" min="0"  max="500000" step="any" placeholder="" autocomplete="off" />
+      <input required name="cost" value="<%= item.cost %>" id="item-cost" class="form-control form-control-lg form-control-title" type="number" min="0" max="500000" step="any" placeholder="" autocomplete="off" />
     </div>
 
     <div class="form-group">
       <label for="post-miles" class="text-muted mb-1"><small>Miles</small></label>
-      <input required name="miles" value="<%= item.miles %>" id="item-miles" class="form-control form-control-lg form-control-title" type="number" min="0"  max="500000" step="any" placeholder="" autocomplete="off" />
+      <input required name="miles" value="<%= item.miles %>" id="item-miles" class="form-control form-control-lg form-control-title" type="number" min="0" max="500000" step="any" placeholder="" autocomplete="off" />
     </div>
 
     <div class="form-group">
@@ -28,7 +27,7 @@
     </div>
 
     <!-- protects against csrf attack -->
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
     <button class="btn btn-primary">Save Updates</button>
   </form>
