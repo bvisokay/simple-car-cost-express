@@ -17,6 +17,10 @@ let sessionOptions = session({
   secret: "Javascript is sooooooo cool",
   // store: overrides default to store session data in memory
   store: new MongoStore({ client: require("./db") }),
+
+
+
+  
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true }
