@@ -3,14 +3,14 @@
 <div class="container mt-3 py-md-5 container--narrow">
   <%- include("includes/flash") %>
   <div>
-    <h4>The Basic Idea</h4>
-    <p>When calculating the cost of a car it may be useful to estimate the useful life for the vehicle in miles. It's also a good to know how much driving you expect to do on a yearly basis. Using these assumptions, along with the current mileage and price of a car, you can estimate how many useful months remain for the car and how much each of these months will cost you.</p>
-    <h4>Months Remaining</h4>
-    <p>This is calculated by taking the total useful life (in miles) and subtracting the current miles. You then divide this by how many miles you expect to drive per month.</p>
-    <h4>Cost Per Remaining Month</h4>
-    <p>This is calculated by dividing a vehicle's price by how many months are remaining.</p>
-    <h4>Default Values</h4>
-    <p>The default values used for "useful life" is 150,000 miles. The default value for "expected miles driven" in a year is 15,000. These values can be customized by visiting your
+    <h4 class="mb-3">The Basics</h4>
+    <p class=text-muted>When calculating the cost of a car it may be useful to estimate the useful life for the vehicle in miles. It's also a good to know how much driving you expect to do on a yearly basis. Using these assumptions, along with the current mileage and price of a car, you can estimate how many useful months remain for the car and how much each of these months will cost you.</p>
+    <h4 class="mb-3">Months Remaining</h4>
+    <p class=text-muted>This is calculated by taking the total useful life (in miles) and subtracting the current miles. You then divide this by how many miles you expect to drive per month.</p>
+    <h4 class="mb-3">Cost Per Remaining Month</h4>
+    <p class=text-muted>This is calculated by dividing a vehicle's price by how many months are remaining.</p>
+    <h4 class="mb-3">Default Values</h4>
+    <p class=text-muted>The default values used for "useful life" is 150,000 miles. The default value for "expected miles driven" in a year is 15,000. These values can be customized by visiting your
       
       <% if (user) { %>
         <a href="/settings/<%= user.username %>">Settings</a>.</p>
@@ -21,14 +21,14 @@
 
 
 
-    <h4>These are Rough Approximations</h4>
-    <p>Understand these metrics are very simplied approximations to better compare vehicles assuming all else is equal.</p>
-    <h4>All Else Equal</h4>
-    <p>All else equal is impossible as no two cars are exactly the same. Some vehicles are more expensive for a reason. Also, vehicles typically have a resale or residual value, at the end of it's useful life.</p>
-    <h4>Residual Value</h4>
-    <p>Residual value is not considered in the "cost per remaining months" metric. Keep in mind that many vehicles will likely have a residual value and certain vehicles "retain their value" better than others.</p>
-    <h4>Use These Metrics as a Guide.</h4>
-    <p>Despite the difficulties in comparing different vehicles as it relates to features, resale value, etc. these metrics can be helpful in comaring vehicles. <a href="/create-item">Add a Car</a> to your list to get started.</p>
+    <h4 class="mb-3">These are Rough Approximations</h4>
+    <p class="text-muted">Understand these metrics are very simplied approximations to better compare vehicles assuming all else is equal.</p>
+    <h4 class="mb-3">All Else Equal</h4>
+    <p class="text-muted">All else equal is impossible as no two cars are exactly the same. Some vehicles are more expensive for a reason. Also, vehicles typically have a resale or residual value, at the end of it's useful life.</p>
+    <h4 class="mb-3">Residual Value</h4>
+    <p class="text-muted">Residual value is not considered in the "cost per remaining months" metric. Keep in mind that many vehicles will likely have a residual value and certain vehicles "retain their value" better than others.</p>
+    <h4 class="mb-3">Use These Metrics as a Guide.</h4>
+    <p class="text-muted">Despite the difficulties in comparing different vehicles as it relates to features, resale value, etc. these metrics can be helpful in comaring vehicles. <a href="/create-item">Add a Car</a> to your list to get started.</p>
   </div>
 </div>
 
@@ -37,7 +37,7 @@
   <hr class="mt-5 mb-5">
   <!-- <div class="col-lg-5 pl-lg-5 pb-3 py-lg-5"> -->
     <div class="container col-lg-5">
-    <h2 class="mb-3"> Register for a Free Account</h2>
+      <h4 class="mb-3">Register for a free account.</h4>
     <form action="/register" method="POST" id="registration-form">
   
       <div class="form-group">
@@ -55,7 +55,7 @@
         <input name="password" id="password-register" class="form-control" type="password" placeholder="Create a password" />
       </div>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-      <button type="submit" class="py-2 mt-4 btn btn-md btn-success btn-block">Sign up for OurApp</button>
+      <button type="submit" class="py-2 mt-4 btn btn-md btn-success btn-block">Sign Up</button>
     </form>
   </div>
 <% } %>
