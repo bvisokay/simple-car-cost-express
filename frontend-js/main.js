@@ -1,6 +1,7 @@
 import RegistrationForm from "./modules/registrationForm"
 import ItemSort from "./modules/itemSort"
-import TestDriveForm from "./modules/testDriveForm"
+import { TestDriveCar } from "./modules/testDriveForm"
+import { TestDriveForm } from "./modules/testDriveForm"
 
 if (document.querySelector("#registration-form")) {
   new RegistrationForm()

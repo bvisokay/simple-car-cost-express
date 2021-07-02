@@ -48,10 +48,11 @@
 <div class="container--test-drive">
   <h1 class="display-3 py-3 mt-5">Test Drive Section</h1>
   <p class="lead text-muted">Enter Vehicle Details to Get Started.</p>
+
   <form id="td-form" class="mt-4">
     <div class="form-group">
       <label for="post-title" class="text-muted mb-1"><small>Description (Example: 2020 Jeep Wrangler)</small></label>
-      <input required name="description" id="td-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+      <input name="description" id="td-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
     </div>
 
     <div class="form-group">
@@ -75,16 +76,7 @@
     <button type="submit" class="btn btn-primary btn-block mt-1">Save Car</button>
   </form>
 
-  <div id="td-list container mt-5">
-    <div class="card mt-5">
-      <div class="list-group">
-        <div class="list-group-item list-group-item-primary">Title</div>
-        <div class="list-group-item list-group-flush">Price</div>
-        <div class="list-group-item list-group-flush">Miles</div>
-        <div class="list-group-item list-group-flush">Link</div>
-      </div>
-    </div>
-  </div>
+  <div id="td-list" class="container mt-5"></div>
 </div>
 
 <!-- End Test Drive Section -->
