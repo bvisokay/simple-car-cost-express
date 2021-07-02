@@ -2,9 +2,8 @@
 
 <div class="container py-md-5">
   <%- include("includes/flash") %>
-
   <div class="row align-items-center">
-    <div class="col-lg-7 py-3 py-md-5">
+    <div class="col-lg-7 py-3 py-md-5 align-items-center">
       <h1 class="display-3 mb-3">A simple way to compare vehicle prices</h1>
       <p class="lead text-muted">The typical vehicle listing is missing some very important information. Summarize a vehicle's price into a simple "cost per remaining month," based on how much driving you do and other basic assumptions. <a href="/learn-more">Learn more...</a></p>
     </div>
@@ -36,5 +35,58 @@
     </div>
   </div>
 </div>
+
+<!-- Being Test Drive Section -->
+
+<!-- <div class="container py-md-5">
+  <div class="row align-items center">
+    <div class="col-lg-7 py-3 py-md-5 align-items-center">The Text Goes Here</div>
+    <div class="col-lg-5 pl-lg-5 pb-3 py-lg-5">The Form Goes Here</div>
+  </div>
+</div> -->
+
+<div class="container--test-drive">
+  <h1 class="display-3 py-3 mt-5">Test Drive Section</h1>
+  <p class="lead text-muted">Enter Vehicle Details to Get Started.</p>
+  <form id="td-form" class="mt-4">
+    <div class="form-group">
+      <label for="post-title" class="text-muted mb-1"><small>Description (Example: 2020 Jeep Wrangler)</small></label>
+      <input required name="description" id="td-title" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="post-cost" class="text-muted mb-1"><small>Price</small></label>
+      <input required name="cost" id="td-price" class="form-control form-control-lg form-control-title" type="number" min="0" max="500000" step="any" placeholder="" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="post-miles" class="text-muted mb-1"><small>Miles</small></label>
+      <input required name="miles" id="td-miles" class="form-control form-control-lg form-control-title" type="number" min="0" max="500000" step="any" placeholder="" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label for="post-link" class="text-muted mb-1"><small>Link (Paste URL here or leave blank)</small></label>
+      <input name="link" id="td-link" class="small form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
+    </div>
+
+    <!-- protects against csrf attack -->
+    <!--  <input type="hidden" name="_csrf" value="<%= csrfToken %>" /> -->
+
+    <button type="submit" class="btn btn-primary btn-block mt-1">Save Car</button>
+  </form>
+
+  <div id="td-list container mt-5">
+    <div class="card mt-5">
+      <div class="list-group">
+        <div class="list-group-item list-group-item-primary">Title</div>
+        <div class="list-group-item list-group-flush">Price</div>
+        <div class="list-group-item list-group-flush">Miles</div>
+        <div class="list-group-item list-group-flush">Link</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End Test Drive Section -->
 
 <%- include('includes/footer') %>
