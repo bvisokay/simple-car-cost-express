@@ -11,6 +11,7 @@ export class TestDriveCar {
     this.nrm = Math.round(parseFloat((this.useful_miles - this.miles) / this.monthly_miles))
     this.cprm = parseFloat((parseFloat(this.price, 10) / parseFloat((this.useful_miles - this.miles) / this.monthly_miles)).toFixed(0))
     this.createdDate = new Date()
+    this.uniqueId = Math.round(Math.random() * 10000)
   }
 }
 
@@ -34,19 +35,16 @@ export class TestDriveForm {
     // Listen and Handle Form Submit
     this.form.addEventListener("submit", e => {
       e.preventDefault()
-      /* console.log("Form Submitted") */
       this.formSubmitHandler()
     })
 
     // Delete a Car
     this.list.addEventListener("click", e => {
       e.preventDefault()
-      /* console.log(e.target) */
-      // remove from UI
-      this.deleteCar(e.target)
       // remove from Store/Local Storage
       this.removeCar(e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-id"))
-      console.log(e.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-id"))
+      //remove from UI
+      this.deleteCar(e.target)
     })
   }
 
@@ -69,36 +67,29 @@ export class TestDriveForm {
   }
 
   formSubmitHandler() {
-    /* console.log("formSubmitHandler Ran") */
-
-    //run simple validation
+    // run simple validation
     if (this.title.value === "" || this.price.value === "" || this.miles.value === "" || this.link.value === "") {
       console.log("Validation Error")
       this.showAlertMsg("Please fill in all fields.", "danger")
     } else {
-      //instantiate car
-      const car = new TestDriveCar(this.title.value.trim(), this.price.value, this.miles.value, this.link.value)
+      // instantiate car
+      let car = new TestDriveCar(this.title.value.trim(), this.price.value, this.miles.value, this.link.value)
 
-      console.log(car)
-
-      //add car to the UI
+      // add car to the UI and show sucess message
       this.addCarToList(car)
       this.showAlertMsg("Car Added.", "success")
 
-      //add car to Store
+      // add car to Store
       this.addCar(car)
 
-      //show success message
-      /* console.log(this.tdStore) */
-
-      //clear input fields
+      // clear input fields
       this.clearInputFields()
     }
   }
 
   clearInputFields() {
     this.form.reset()
-    /* this.title.focus() */
+    this.title.focus()
   }
 
   showAlertMsg(messageToSend, className) {
@@ -108,15 +99,14 @@ export class TestDriveForm {
     const container = document.querySelector(".container--test-drive")
     const form = this.form
     container.insertBefore(div, form)
-    // Vanish in 3 seconds
+    // Vanish in 3 Seconds
     setTimeout(() => document.querySelector(".alertMsg").remove(), 3000)
   }
 
   addCarToList(car) {
-    /* console.log("The result for list is " + this.list) */
     const div = document.createElement("div")
     div.innerHTML = `
-    <div class="card mt-5" data-id="${car.createdDate}">
+    <div class="card mt-5" data-id="${car.uniqueId}">
       <div class="list-group">
         <div class="list-group-item list-group-item-primary">${car.title}<a href="https://${car.link}" target="_blank" class="text-primary mr-2"><i class="ml-2 fas fa-external-link-alt"></i></a><span class="float-right">
         <a href="#" class="btn btn-danger btn-sm delete">X</a>
@@ -129,7 +119,8 @@ export class TestDriveForm {
       </div>
     </div>
   `
-    this.list.appendChild(div)
+    /* was this.list.appendChild(div) */
+    this.list.insertAdjacentElement("afterbegin", div)
   }
 
   // Store cars in local storage
@@ -150,15 +141,14 @@ export class TestDriveForm {
     localStorage.setItem("cars", JSON.stringify(cars))
   }
 
-  removeCar(createdDate) {
+  removeCar(uniqueId) {
     const cars = this.getCars()
 
     cars.forEach((car, idx) => {
-      if (car.createdDate === createdDate) {
+      if (car.uniqueId.toString() === uniqueId.toString()) {
         cars.splice(idx, 1)
       }
     })
-
     localStorage.setItem("cars", JSON.stringify(cars))
   }
 }
