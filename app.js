@@ -8,13 +8,21 @@ const flash = require("connect-flash")
 //needed to protect against csrf attacks
 const csrf = require("csurf")
 // needed to force https
-const http = require("http")
-const enforce = require("express-sslify")
+/* const http = require("http")
+const enforce = require("express-sslify") */
 //needed for express
 const app = express()
 
 // enforce https
-enforce.HTTPS({ trustProtoHeader: true })
+/* enforce.HTTPS({ trustProtoHeader: true }) */
+
+//manually enforce https from jake trent
+if (process.env.NODE_ENV === "production") {
+  app.use((req, res, next) => {
+    if (req.header("x-forwarded-proto") !== "https") res.redirect(`https://${req.header("host")}${req.url}`)
+    else next()
+  })
+}
 
 // set up configuration object for sessions
 // not worth memorizing boilerplate
