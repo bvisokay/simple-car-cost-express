@@ -7,8 +7,14 @@ const MongoStore = require("connect-mongo")(session)
 const flash = require("connect-flash")
 //needed to protect against csrf attacks
 const csrf = require("csurf")
+// needed to force https
+const http = require("http")
+const enforce = require("express-sslify")
 //needed for express
 const app = express()
+
+// enforce https
+enforce.HTTPS({ trustProtoHeader: true })
 
 // set up configuration object for sessions
 // not worth memorizing boilerplate
@@ -18,9 +24,6 @@ let sessionOptions = session({
   // store: overrides default to store session data in memory
   store: new MongoStore({ client: require("./db") }),
 
-
-
-  
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true }
@@ -43,7 +46,11 @@ app.use(function (req, res, next) {
   res.locals.success = req.flash("success")
 
   //make current user id available on the req object
-  if (req.session.user) {req.visitorId = req.session.user._id} else {req.visitorId = 0}
+  if (req.session.user) {
+    req.visitorId = req.session.user._id
+  } else {
+    req.visitorId = 0
+  }
   //makes user session data available within view templates
   res.locals.user = req.session.user
   next()
