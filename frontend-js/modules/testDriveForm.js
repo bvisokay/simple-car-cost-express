@@ -1,11 +1,11 @@
 // Car Class:  Represents test drive car
 
 export class TestDriveCar {
-  constructor(title, price, miles, link) {
+  constructor(title, price, miles) {
     this.title = title.trim()
     this.price = parseInt(price, 10)
     this.miles = parseInt(miles, 10)
-    this.link = link.trim()
+    // other items not directly defined by user
     this.useful_miles = 150000
     this.monthly_miles = 1250
     this.nrm = Math.round(parseFloat((this.useful_miles - this.miles) / this.monthly_miles))
@@ -22,12 +22,11 @@ export class TestDriveForm {
     this.title = document.querySelector("#td-title")
     this.price = document.querySelector("#td-price")
     this.miles = document.querySelector("#td-miles")
-    this.link = document.querySelector("#td-link")
     this.list = document.querySelector("#td-list")
     this.events()
   }
 
-  // events
+  // EVENTS
   events() {
     // DisplayExistingCars
     document.addEventListener("DOMContentLoaded", this.displayCars())
@@ -48,7 +47,7 @@ export class TestDriveForm {
     })
   }
 
-  //methods
+  // METHODS
 
   deleteCar(el) {
     if (el.classList.contains("delete")) {
@@ -68,12 +67,12 @@ export class TestDriveForm {
 
   formSubmitHandler() {
     // run simple validation
-    if (this.title.value === "" || this.price.value === "" || this.miles.value === "" || this.link.value === "") {
+    if (this.title.value === "" || this.price.value === "" || this.miles.value === "") {
       console.log("Validation Error")
       this.showAlertMsg("Please fill in all fields.", "danger")
     } else {
       // instantiate car
-      let car = new TestDriveCar(this.title.value.trim(), this.price.value, this.miles.value, this.link.value)
+      let car = new TestDriveCar(this.title.value.trim(), this.price.value, this.miles.value)
 
       // add car to the UI and show sucess message
       this.addCarToList(car)

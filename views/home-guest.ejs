@@ -4,8 +4,8 @@
   <%- include("includes/flash") %>
   <div class="row align-items-center">
     <div class="col-lg-7 py-3 py-md-5 align-items-center">
-      <h1 class="display-3 mb-3">A simple way to compare vehicle prices</h1>
-      <p class="lead text-muted">The typical vehicle listing is missing some very important information. Summarize a vehicle's price into a simple "cost per remaining month," based on how much driving you do and other basic assumptions. <a href="/learn-more">Learn more...</a></p>
+      <h1 class="display-4 mb-3">A Simple Way to Compare Vehicle Prices</h1>
+      <p class="lead text-muted">The typical vehicle listing is missing some very important information. Summarize a vehicle's price into a simple "cost per remaining month" value based on how much driving you do and other basic assumptions. <a class="mt-3 mt-3" href="/learn-more">Learn More...</a></p>
     </div>
     <div class="col-lg-5 pl-lg-5 pb-3 py-lg-5">
       <form action="/register" method="POST" id="registration-form">
@@ -13,7 +13,7 @@
         <div class="alert alert-danger small"><%= message %></div>
         <% }) %>
 
-        <p class="text-muted"><stong>Register for a free account today to get started.</stong></p>
+        <p class="font-weight-bold">Register for a Free Account Today</p>
 
         <div class="form-group">
           <label for="username-register" class="text-muted mb-1"><small>Username</small></label>
@@ -46,8 +46,8 @@
 </div> -->
 
 <div class="container--test-drive">
-  <h1 class="display-3 py-3 mt-5">Test Drive Section</h1>
-  <p class="lead text-muted">Enter Vehicle Details to Get Started.</p>
+  <h1 class="display-5 py-3 mt-5 font-weight-bold">Take It For A Test Drive</h1>
+  <p class="lead text-muted">Enter Vehicle Details Below</p>
 
   <form id="td-form" class="mt-4">
     <div class="form-group">
@@ -65,18 +65,14 @@
       <input required name="miles" id="td-miles" class="form-control form-control-lg form-control-title" type="number" min="0" max="500000" step="any" placeholder="" autocomplete="off" />
     </div>
 
-    <div class="form-group">
-      <label for="post-link" class="text-muted mb-1"><small>Link (Paste URL here or leave blank)</small></label>
-      <input name="link" id="td-link" class="small form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
-    </div>
-
     <!-- protects against csrf attack -->
     <!--  <input type="hidden" name="_csrf" value="<%= csrfToken %>" /> -->
 
     <button type="submit" class="btn btn-primary btn-block mt-1">Save Car</button>
   </form>
+  <p class="text-muted mt-4 mb-4">Assumed driving of 15,000 miles per year and valuable until 150,000 miles. Customize these values, and gain access to sorting, saving links, and the ability to access your listings across multiple devices, by <strong>registering for a free account</strong>.</p>
 
-  <div id="td-list" class="container mt-5"></div>
+  <div id="td-list" class="container mt-4"></div>
 </div>
 
 <!-- End Test Drive Section -->
