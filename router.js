@@ -6,6 +6,7 @@ const itemController = require("./controllers/itemController")
 // error
 // user related routes
 router.get("/", userController.home)
+router.get("/register", userController.registerScreen)
 router.get("/learn-more", userController.learnMore)
 router.post("/register", userController.register)
 router.post("/login", userController.login)

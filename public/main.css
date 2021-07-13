@@ -11,10 +11,21 @@ body,
   max-width: 732px;
 }
 
-.container--test-drive, .container--car-image {
+.container--very-narrow,
+.container--test-drive,
+.container--car-image {
   max-width: 650px;
   margin: 0 auto;
   padding: 0 3.5rem;
+}
+
+.test-drive-card .list-group-item-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  /* color: #fff;
+  background-color: #2c6eaa; */
 }
 
 .car-image {

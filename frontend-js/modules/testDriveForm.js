@@ -69,7 +69,7 @@ export class TestDriveForm {
     })
 
     // Listen to Miles Field
-   /*  this.miles.addEventListener("blur", () => {
+    /*  this.miles.addEventListener("blur", () => {
       this.isDifferent(this.miles, this.milesCheck)
       console.log("blur ran")
     }) */
@@ -197,7 +197,7 @@ export class TestDriveForm {
   deleteCar(el) {
     if (el.classList.contains("delete")) {
       el.parentElement.parentElement.parentElement.parentElement.remove()
-      /* this.showAlertMsg("Car Deleted", "success") */
+      this.showAlertMsg("Car Succesfully Deleted", "success")
     } else {
     }
   }
@@ -222,18 +222,23 @@ export class TestDriveForm {
 
     // if everything is perfect then create the car
     if (!this.title.errors && !this.price.errors && !this.miles.errors) {
-
       // cleanup miles field if left blank
-      if (this.title.value == "") {this.title.value = "Example Title (Field Left Blank)"}
-      if (this.price.value == "") {this.price.value = Math.round(Math.random()*150000)}
-      if (this.miles.value == "") {this.miles.value = Math.round(Math.random()*150000)}
+      if (this.title.value == "") {
+        this.title.value = "Example Title (Field Left Blank)"
+      }
+      if (this.price.value == "") {
+        this.price.value = Math.round(Math.random() * 150000)
+      }
+      if (this.miles.value == "") {
+        this.miles.value = Math.round(Math.random() * 150000)
+      }
 
       // instantiate car
       let car = new TestDriveCar(this.title.value.trim(), this.price.value, this.miles.value)
 
       // add car to the UI and show sucess message
       this.addCarToList(car)
-      /* this.showAlertMsg("Car Added.", "success") */
+      this.showAlertMsg("Car Added.", "success")
 
       // add car to Store
       this.addCar(car)
@@ -245,7 +250,6 @@ export class TestDriveForm {
 
       // clear input fields
       this.clearInputFields()
-
     } else {
     }
   }
@@ -269,15 +273,15 @@ export class TestDriveForm {
   addCarToList(car) {
     const div = document.createElement("div")
     div.innerHTML = `
-    <div class="card mt-5" data-id="${car.uniqueId}">
+    <div class="card test-drive-card mt-5" data-id="${car.uniqueId}">
       <div class="list-group">
-        <div class="list-group-item list-group-item-primary">${car.title}<span class="float-right">
-        <a href="#" class="btn btn-danger btn-sm delete">X</a>
+        <div class="list-group-item list-group-item-primary">${car.title}<span>
+        <a href="#" class="btn btn-danger btn-sm delete">X</i></a>
         </span>
         </div>
         <div class="list-group-item list-group-flush">Price: $${car.price.toLocaleString("en-US")}</div>
         <div class="list-group-item list-group-flush">Miles: ${car.miles.toLocaleString("en-US")}</div>
-        <div class="list-group-item list-group-flush">Remaining Months: ${car.nrm}</div>
+        <div class="list-group-item list-group-flush">Remaining Months: ${car.nrm} <span class="text-muted small">~${(car.nrm / 12).toFixed(1)} Years</span></div>
         <div class="list-group-item list-group-flush">Cost Per Remaining Months: $${car.cprm.toLocaleString("en-US")}</div>
       </div>
     </div>
