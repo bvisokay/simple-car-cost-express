@@ -13,11 +13,15 @@
         <div class="alert alert-danger small"><%= message %></div>
         <% }) %>
 
-        <p class="font-weight-bold">Register for a Free Account Today</p>
+        <p class="font-weight-bold">Register for a Free Account</p>
 
         <div class="form-group">
           <label for="username-register" class="text-muted mb-1"><small>Username</small></label>
           <input name="username" id="username-register" class="form-control" type="text" placeholder="Pick a username" autocomplete="off" />
+
+
+
+          
         </div>
 
         <div class="form-group">
@@ -45,6 +49,10 @@
   </div>
 </div> -->
 
+<div class="container--car-image">
+  <img class="car-image" src="/car.svg" alt="car">
+</div>
+
 <div class="container--test-drive">
   <h1 class="display-5 py-3 mt-5 font-weight-bold">Take It For A Test Drive</h1>
   <p class="lead text-muted">Enter Vehicle Details Below</p>
@@ -68,7 +76,7 @@
     <!-- protects against csrf attack -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-    <button type="submit" class="btn btn-primary btn-block mt-1">Save Car</button>
+    <button type="submit" class="btn btn-primary btn-block mt-1">Calculate</button>
   </form>
   <p class="text-muted mt-4 mb-4 small">Assumed driving of 15,000 miles per year and valuable until 150,000 miles. Customize these values, and gain access to sorting, saving links, and the ability to access your listings across multiple devices, by <strong>registering for a free account</strong>.</p>
 

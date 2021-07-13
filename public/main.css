@@ -11,10 +11,22 @@ body,
   max-width: 732px;
 }
 
-.container--test-drive {
+.container--test-drive, .container--car-image {
   max-width: 650px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 3.5rem;
+}
+
+.car-image {
+  display: block;
+  margin: 4rem auto 0 auto;
+}
+
+@media (min-width: 768px) {
+  .car-image {
+    display: block;
+    margin: 2rem auto 0 auto;
+  }
 }
 
 .form-control-title {
