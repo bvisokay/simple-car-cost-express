@@ -1,6 +1,4 @@
-<%- include('includes/header') %>
-
-<%- include("includes/flash") %>
+<%- include('includes/header') %> <%- include("includes/flash") %>
 
 <div class="container py-md-5 container--narrow">
   <a class="small font-weight-bold" href="/profile/<%= user.username %>">&laquo; Back to List</a>
@@ -27,7 +25,7 @@
     </div>
 
     <!-- protects against csrf attack -->
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
     <button class="btn btn-primary">Save Car</button>
   </form>

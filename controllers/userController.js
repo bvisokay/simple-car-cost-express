@@ -35,7 +35,7 @@ exports.login = function (req, res) {
       // add new properties onto a session object
       // session data set in db using package connect-mongo (we do this in app.js)
       req.session.user = { username: user.data.username, _id: user.data._id, useful_miles: user.data.useful_miles, monthly_miles: user.data.monthly_miles }
-      // tell session to manually save using save method 
+      // tell session to manually save using save method
       // using callback function since db process can take a bit to complete action
       req.session.save(function () {
         // send back result
@@ -101,106 +101,113 @@ exports.home = function (req, res) {
     res.redirect(`/profile/${req.session.user.username}`)
   } else {
     // also pass data from errors and regErrors arrays into the home-guest template
-    res.render("home-guest", {regErrors: req.flash("regErrors") })
+    res.render("home-guest", { regErrors: req.flash("regErrors") })
   }
+}
+
+exports.registerScreen = function (req, res) {
+  res.render("register", { regErrors: req.flash("regErrors") })
 }
 
 exports.learnMore = function (req, res) {
   res.render("learn-more")
 }
 
-
-exports.ifUserExists = function(req, res, next) {
-  User.findByUsername(req.params.username).then((userDocument) => {
-    req.profileUser = userDocument
-    next()
-  }).catch(() => {
-    res.render('404')
-  })
+exports.ifUserExists = function (req, res, next) {
+  User.findByUsername(req.params.username)
+    .then(userDocument => {
+      req.profileUser = userDocument
+      next()
+    })
+    .catch(() => {
+      res.render("404")
+    })
 }
 
-
-exports.profilePostsScreen = function(req, res) {
+exports.profilePostsScreen = function (req, res) {
   // only if visitor is the owner then show the page
   // else show a 404 page with a flash message
   if (req.params.username == req.session.user.username) {
     // ask our item model for items by a certain author id
-    Item.findByAuthorId(req.profileUser._id).then(function(items) {
-      res.render('profile', {
-        items: items,
-        profileUsername: req.profileUser.username
+    Item.findByAuthorId(req.profileUser._id)
+      .then(function (items) {
+        res.render("profile", {
+          items: items,
+          profileUsername: req.profileUser.username
         })
         //console.log(items)
-      }).catch(function() {res.render("404")})
+      })
+      .catch(function () {
+        res.render("404")
+      })
   } else {
     req.flash("errors", "You do not have permission to perform that action.")
     req.session.save(() => res.redirect("404"))
   }
 }
 
-exports.viewSettingsScreen = function(req, res) {
+exports.viewSettingsScreen = function (req, res) {
   // only if visitor is the owner then show the page
   if (req.params.username == req.session.user.username) {
     // ask our user model for properties attached to certain username
-    User.findByUsername(req.profileUser.username).then(function() {
-      res.render("settings", {
-        profileUsername: req.profileUser.username,
-        profileUsefulMiles: req.profileUser.useful_miles,
-        profileMonthlyMiles: req.profileUser.monthly_miles
+    User.findByUsername(req.profileUser.username)
+      .then(function () {
+        res.render("settings", {
+          profileUsername: req.profileUser.username,
+          profileUsefulMiles: req.profileUser.useful_miles,
+          profileMonthlyMiles: req.profileUser.monthly_miles
+        })
       })
-    }).catch(function() {res.render("404")})
- } else {
+      .catch(function () {
+        res.render("404")
+      })
+  } else {
     // if the visitor is not the owner then this will run
     req.flash("errors", "You do not have permission to perform that action.")
     req.session.save(() => res.redirect("404"))
   } // closes else block
 } // closes viewSettingsScreenFunction
 
-
 /// Customizing User Settings
-exports.edit = function(req, res) {
+exports.edit = function (req, res) {
   //console.log("Edit function ran")
   let user = new User(req.body, req.params.username)
 
   // pssing the update function requestedUsername and visitorUsername
-  user.update(req.params.username, req.session.user.username, req.session.user._id).then((status) => {
-    //console.log("Then function ran in Edit Function")
-    //console.log("Status came back as: " + status)
-    // the settings were successfully updated in the database
-    // or the user did have permission, but there were validation errors
-    if(status == "success") {
-      // console.log("If Block Ran since status was 'success'")
-      // settings were successfully updated in the database
-      // log user out for changes to take effect for new items created
+  user
+    .update(req.params.username, req.session.user.username, req.session.user._id)
+    .then(status => {
+      //console.log("Then function ran in Edit Function")
+      //console.log("Status came back as: " + status)
+      // the settings were successfully updated in the database
+      // or the user did have permission, but there were validation errors
+      if (status == "success") {
+        // console.log("If Block Ran since status was 'success'")
+        // settings were successfully updated in the database
+        // log user out for changes to take effect for new items created
         req.session.destroy(function () {
           // redirect to home-guest template
           res.redirect("/")
         })
-    } else {
-      // user had permission but there were validation errors
-      console.log("Else Block Ran in Edit function")
-      user.errors.forEach(function(error) {
-        req.flash("errors", error)
-      })
-        req.session.save(function() {
+      } else {
+        // user had permission but there were validation errors
+        console.log("Else Block Ran in Edit function")
+        user.errors.forEach(function (error) {
+          req.flash("errors", error)
+        })
+        req.session.save(function () {
           res.redirect(`/settings/${req.params.username}`)
         })
-    } // closes else block
-  }).catch(() => {
-    // console.log("Catch Function Ran in Edit Function")
-    // if a user with requested id doesn't exit
-    // or if the current visitor is not the owner
-    req.flash("errors", "You do not have permission to perform that action")
-    req.session.save(function() {
-      /* res.redirect('/') */
-      res.send("catch block ran in Update function")
+      } // closes else block
+    })
+    .catch(() => {
+      // console.log("Catch Function Ran in Edit Function")
+      // if a user with requested id doesn't exit
+      // or if the current visitor is not the owner
+      req.flash("errors", "You do not have permission to perform that action")
+      req.session.save(function () {
+        /* res.redirect('/') */
+        res.send("catch block ran in Update function")
       })
-  }) // Closes Catch
-  
+    }) // Closes Catch
 } //Closes Update
-
-
-
-        
-
-
