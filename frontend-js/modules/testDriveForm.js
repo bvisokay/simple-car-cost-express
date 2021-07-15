@@ -273,7 +273,7 @@ export class TestDriveForm {
   addCarToList(car) {
     const div = document.createElement("div")
     div.innerHTML = `
-    <div class="card test-drive-card mt-5" data-id="${car.uniqueId}">
+    <div class="card test-drive-card mb-4 mt-5" data-id="${car.uniqueId}">
       <div class="list-group">
         <div class="list-group-item list-group-item-primary">${car.title}<span>
         <a href="#" class="btn btn-danger btn-sm delete">X</i></a>
@@ -282,7 +282,7 @@ export class TestDriveForm {
         <div class="list-group-item list-group-flush">Price: $${car.price.toLocaleString("en-US")}</div>
         <div class="list-group-item list-group-flush">Miles: ${car.miles.toLocaleString("en-US")}</div>
         <div class="list-group-item list-group-flush">Remaining Months: ${car.nrm} <span class="text-muted small">~${(car.nrm / 12).toFixed(1)} Years</span></div>
-        <div class="list-group-item list-group-flush">Cost Per Remaining Months: $${car.cprm.toLocaleString("en-US")}</div>
+        <div class="list-group-item list-group-flush">Cost Per Remaining Month: $${car.cprm.toLocaleString("en-US")}</div>
       </div>
     </div>
   `
