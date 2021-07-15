@@ -5,19 +5,20 @@ const session = require("express-session")
 const MongoStore = require("connect-mongo")(session)
 // needed to have flash messages
 const flash = require("connect-flash")
-//needed to protect against csrf attacks
+// needed to protect against csrf attacks
 const csrf = require("csurf")
-//needed for express
+// needed for express
 const app = express()
 
-//manually enforce https (snippet from jake trent site)
-//breaks localhost so I comment this out while working locally
-/* if (process.env.NODE_ENV === "production") {
+// manually enforce https (snippet from jake trent site)
+// breaks localhost so I comment this out while working locally
+// and often forget to bring back in before re-deploying
+if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     if (req.header("x-forwarded-proto") !== "https") res.redirect(`https://${req.header("host")}${req.url}`)
     else next()
   })
-} */
+}
 
 // set up configuration object for sessions
 // not worth memorizing boilerplate

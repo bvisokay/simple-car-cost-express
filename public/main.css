@@ -17,6 +17,12 @@ body,
   max-width: 650px;
   margin: 0 auto;
   padding: 0 3.5rem;
+  /* border: 2px solid cornflowerblue; */
+}
+
+p.very-small {
+  font-size: 0.5rem;
+  margin: 1rem;
 }
 
 .test-drive-card .list-group-item-primary {
@@ -31,6 +37,8 @@ body,
 .car-image {
   display: block;
   margin: 4rem auto 0 auto;
+  /* border: 1px solid crimson; */
+  /* padding-right: 2rem; */
 }
 
 @media (min-width: 768px) {
@@ -38,6 +46,26 @@ body,
     display: block;
     margin: 2rem auto 0 auto;
   }
+}
+
+/* .car-image > svg {
+  border: 3px solid orangered;
+  display: block;
+  margin: 0 auto;
+} */
+
+#body-main {
+  fill: #479ced;
+  transition: all 300ms ease;
+}
+
+#body-main:hover {
+  fill: #47b0ed;
+}
+
+#shadows,
+#shadow-windshield {
+  fill: #2c6eaa;
 }
 
 .form-control-title {
