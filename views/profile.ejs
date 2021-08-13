@@ -16,9 +16,8 @@
         <h6 class="text-muted">Edit your <a href="/settings/<%= user.username %>">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Month" metrics are calculated.</h6><% } else { %>
       <h6 class="text-muted mb-3"><a href="/create-item">Add a Car</a> to your list to get started.<h6><h6 class="text-muted">You can also edit your <a href="/settings/<%= user.username %>">Settings</a> or <a href="/learn-more">Learn More</a> about how the "Remaining Months" and "Cost Per Remaining Month" metrics are calculated.</h6>
       <% } %>
-  </div> <!-- Closes header text container -->
+  </div>
 
-  <!-- <% if (items.length > 1) { %> -->
     <div class="sort-drop-down mt-2 mb-4 pt-2 pb-2">
       <select class="form-select pt-2 pb-2" name="Select_Sort_Order" id="sort-item">
       <option selected value="created_date_asc">Newest Item First (by Date Created)</option>
@@ -32,7 +31,6 @@
       <option value="miles_desc">Highest Mileage First</option>
       </select>
       </div>
-  <!-- <% } %> -->
 
   
 
@@ -40,38 +38,34 @@
     <span class="list-group-item list-group-item-primary">
       <strong><%= item.description %></strong>
 
-      <!-- Conditional Link Icon Code Here -->
       <% if (item.link == "") { %>
       <% } else { %>
         <a href="<%= item.link %>" target="_blank" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Link To Listing"><i class="ml-2 fas fa-external-link-alt"></i></a>
-      <% } %><!-- Conditional Link Icon Code End -->
-
-      <!-- opens edit and delete span floated right here -->
+      <% } %>
+      
       <span class="float-right">
-        <!-- edit icon -->
+        
         <a href="/item/<%= item._id %>/edit" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
-
-        <!-- delete icon form button starts here -->
+        
         <form class="delete-post-form d-inline" action="/item/<%= item._id %>/delete" method="POST">
-          <!-- protects against csrf attack -->
+          
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
-          <!-- Actual button -->
+          
           <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
-        </form><!-- form button ends here -->
-      </span><!-- closes edit and delete span floated right here -->
+        </form>
+      </span>
 
-    </span> <!-- closes list-group-item-primary span -->
+    </span> 
    
-    
     <span class="list-group-item list-group-flush">Cost: $<span class="cost-value"><%= item.cost.toLocaleString("en-US") %></span></span>
     <span class="list-group-item list-group-flush">Miles: <span class="miles-value"><%= item.miles.toLocaleString("en-US") %></span></span>
     <span class="list-group-item list-group-flush">Remaining Months: <span class="months-value"><%= item.remaining_months %></span><span class="text-muted small"> (~<%= (item.remaining_months / 12).toFixed(1) %> Years)</span></span>
     <span class="list-group-item list-group-flush">Cost Per Remaining Month: $<span class="per-value"><%= item.cost_per_remaining_month.toLocaleString("en-US") %></span></span>
     
-  </div> <!-- closes card -->
+  </div> 
 
    <% }) %>
-  </div> <!-- closes list group -->
-</div> <!-- closes container -->
+  </div> 
+</div> 
 
 <%- include('includes/footer')  %>

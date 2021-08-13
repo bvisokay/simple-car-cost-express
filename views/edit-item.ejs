@@ -26,7 +26,6 @@
       <input name="link" value="<%= item.link %>" id="item-link" class="form-control form-control-lg form-control-title" type="text" placeholder="" autocomplete="off" />
     </div>
 
-    <!-- protects against csrf attack -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
     <button class="btn btn-primary">Save Updates</button>

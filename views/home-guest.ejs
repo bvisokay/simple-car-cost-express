@@ -36,15 +36,6 @@
   </div>
 </div>
 
-<!-- Being Test Drive Section -->
-
-<!-- <div class="container py-md-5">
-  <div class="row align-items center">
-    <div class="col-lg-7 py-3 py-md-5 align-items-center">The Text Goes Here</div>
-    <div class="col-lg-5 pl-lg-5 pb-3 py-lg-5">The Form Goes Here</div>
-  </div>
-</div> -->
-
 <div class="container--car-image">
   <img class="car-image" src="/car.svg" alt="car" />
   <p class="very-small text-right text-muted">Photo Credit: <a href="https://www.vecteezy.com/free-vector/car">Brian Goff</a></p>
@@ -70,7 +61,6 @@
       <input required name="miles" id="td-miles" class="form-control form-control-lg form-control-title" type="number" step="any" placeholder="" autocomplete="off" />
     </div>
 
-    <!-- protects against csrf attack -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
     <button type="submit" class="btn btn-primary btn-block mt-1">Calculate</button>
@@ -79,7 +69,5 @@
 
   <div id="td-list" class="container mt-4"></div>
 </div>
-
-<!-- End Test Drive Section -->
 
 <%- include('includes/footer') %>
