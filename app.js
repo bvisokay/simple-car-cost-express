@@ -13,12 +13,12 @@ const app = express()
 // manually enforce https (snippet from jake trent site)
 // breaks localhost so I comment this out while working locally
 // and often forget to bring back in before re-deploying
-if (process.env.NODE_ENV === "production") {
+/* if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     if (req.header("x-forwarded-proto") !== "https") res.redirect(`https://${req.header("host")}${req.url}`)
     else next()
   })
-}
+} */
 
 // set up configuration object for sessions
 // not worth memorizing boilerplate

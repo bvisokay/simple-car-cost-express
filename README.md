@@ -2,7 +2,7 @@
 
 :blue_car: Users can calculate "cost per remaining month" given how much driving they do, expected life of a car, and current mileage.
 
-<!-- :traffic_light: Note: This project is no longer deployed. Old version of project, code kept for reference. -->
+:traffic_light: Note: This project is deploed on a cold start heroku server. Old version of project, code kept for reference.
 
 ### Stack
 
